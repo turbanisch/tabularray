@@ -2,19 +2,16 @@ tblr <- function(df,
                  caption = NULL,
                  source_note = NULL,
                  col_names = NULL,
-                 ...) {
-  # collect dots (as dyn-dots)
-  new_interface <- rlang::list2(...)
-  
+                 interface = NULL) {
   # escape column names for latex
   if (is_null(col_names)) {
     col_names <- gt::escape_latex(colnames(df))
   }
   
   # generate and append colspec if not specified in options
-  if (is_null(new_interface$colspec)) {
+  if (is_null(interface$colspec)) {
     natural_colspec <- if_else(map_lgl(df, is.numeric), "r", "l") |> str_flatten()
-    new_interface$colspec <- natural_colspec
+    interface$colspec <- natural_colspec
   }
   
   # find positions of character columns (only those will be escaped)
@@ -26,7 +23,7 @@ tblr <- function(df,
     caption = caption,
     source_note = source_note,
     col_names = col_names,
-    new_interface = new_interface,
+    interface = interface,
     character_column_indices = character_column_indices
   )
 }
@@ -48,17 +45,17 @@ tblr_as_latex <- function(x) {
     collapse_rows()
   
   # evaluate new interface
-  new_interface_vector <- list_simplify(attr(x, "new_interface"))
-  new_interface <- str_c(
-    names(new_interface_vector), 
+  interface_vector <- list_simplify(attr(x, "interface"))
+  interface <- str_c(
+    names(interface_vector), 
     "=", 
-    enclose_curly(new_interface_vector)
+    enclose_curly(interface_vector)
   ) |> str_flatten(collapse = ",") |> 
     enclose_curly()
   
   # bind all parts
   tabular <- c(
-    str_c("\\begin{booktabs}", new_interface),
+    str_c("\\begin{booktabs}", interface),
     "\\toprule",
     header,
     "\\midrule",
