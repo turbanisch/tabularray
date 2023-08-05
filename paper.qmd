@@ -24,30 +24,42 @@ fs::dir_ls("R") |> walk(source)
 ```
 
 ```{r}
-# dummy data
+# tracking table
 df <- tibble(
   HS2 = c("30", "90"),
   Description = c(
-    "Pharmaceutical products in US$",
+    "Pharmaceutical products",
     "Optical, photographic, cinematographic, measuring, checking, medical
 or surgical instruments and apparatus; parts and accessories"
   ),
   Value = c(806123123.23, 543015442)
 )
-```
 
-```{r}
 tblr(
   df,
   caption = "Top 15 Aid Export Products (Million US\\$, HS2 level), 2017–2021",
   source_note = "Data from GACC (2022).",
-  col_names = c("Model", "MPG", "{Displacement\\\\(mm)}"),
-  interface = list(width = "0.5\\linewidth",
-                   colspec = "rX[l]r")
+  interface = list(colspec = "rX[l]r")
 ) |>
   mutate(Value = gt::vec_fmt_number(Value,
                                     decimals = 1L,
                                     scale_by = 1e-6))
+```
+
+```{r}
+col_type_df <- tibble(
+  model = c("Mazda", "Mercedes $4", "Audi", "Hyunday"),
+  badass = c(TRUE, TRUE, FALSE, TRUE),
+  cyl = c(4L, 6L, 6L, 4L),
+  type = factor(c("SUV", "Sports & car", "SUV", "Sports & car"))
+)
+
+tblr(
+  col_type_df,
+  col_names = c("Model", "Badass", "Cylinder", "{Type\\\\(of car)}"),
+  type = "draft",
+  booktabs = FALSE
+)
 ```
 
 

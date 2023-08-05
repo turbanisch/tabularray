@@ -1,9 +1,15 @@
 tblr <- function(df,
+                 type = "float",
+                 booktabs = TRUE,
                  caption = NULL,
                  source_note = NULL,
                  col_names = NULL,
                  interface = list(),
                  options = list()) {
+  # sanity checks
+  type <- match.arg(type, c("draft", "float", "break"))
+  if (type != "draft") stopifnot(!is_null(caption) || !is_null(options$caption)) # types other than draft need caption
+  
   # escape column names for latex
   if (is_null(col_names)) {
     col_names <- gt::escape_latex(colnames(df))
@@ -25,6 +31,8 @@ tblr <- function(df,
   structure(
     df,
     class = c("tblr", "tbl_df", "tbl", "data.frame"),
+    type = type,
+    booktabs = booktabs,
     source_note = source_note,
     col_names = col_names,
     interface = interface,
@@ -47,40 +55,67 @@ tblr_as_latex <- function(x) {
       .cols = where(\(x) !is.character(x)),
       .fns = \(x) format(x, trim = TRUE)
     )) |>
-    collapse_rows()
+    collapse_rows() |> 
+    str_flatten(collapse = "\n")
   
-  # evaluate new interface
-  interface_vector <- list_simplify(attr(x, "interface"))
-  interface <- str_c(
-    names(interface_vector), 
-    "=", 
-    enclose_curly(interface_vector)
-  ) |> str_flatten(collapse = ",") |> 
-    enclose_curly()
+  # format list arguments
+  interface <- format_key_value_pairs(attr(x, "interface"))
+  options <- format_key_value_pairs(attr(x, "options"))
   
-  # bind all parts
-  tabular <- c(
-    str_c("\\begin{booktabs}", interface),
-    "\\toprule",
-    header,
-    "\\midrule",
-    body,
-    "\\bottomrule",
-    "\\end{booktabs}"
-  ) |> str_flatten(collapse = "\n")
+  # choose environment based on type and booktabs
+  if (attr(x, "type") == "draft") {
+    env <- if (attr(x, "booktabs")) "booktabs" else "tblr"
+  } else if (attr(x, "type") == "float") {
+    env <- if (attr(x, "booktabs")) "talltabs" else "talltblr"
+  } else {
+    env <- if (attr(x, "booktabs")) "longtabs" else "longtblr"
+  }
   
-  caption_line <- if (!is_null(attr(x, "options")$caption)) str_c("\\caption{", attr(x, "options")$caption, "}") else NULL
+  # choose rules based on booktabs
+  if (attr(x, "booktabs")) {
+    toprule <- "\\toprule"
+    midrule <- "\\midrule"
+    bottomrule <- "\\bottomrule"
+  } else {
+    toprule <- "\\hline"
+    midrule <- "\\hline"
+    bottomrule <- "\\hline"
+  }
   
-  # enclose in table environment
-  out <- str_c(
-    "\\begin{table}",
-    "\\centering",
-    caption_line,
-    tabular,
-    "\\end{table}",
-    sep = "\n"
-  )
+  # choose template based on type (draft table does not have options)
+  if (attr(x, "type") == "draft") {
+    template <- "
+    \\begin{center}
+    \\begin{<env>}{
+    <interface>
+    }
+    <toprule>
+    <header>
+    <midrule>
+    <body>
+    <bottomrule>
+    \\end{<env>}
+    \\end{center}
+    "
+  } else {
+    template <- "
+    \\begin{<env>}[
+    <options>
+    ]{
+    <interface>
+    }
+    <toprule>
+    <header>
+    <midrule>
+    <body>
+    <bottomrule>
+    \\end{<env>}
+    "
+  }
   
+  # merge variables into template
+  out <- stick(template)
+
   # assign class "knit_asis"
   knitr::asis_output(out)
 }

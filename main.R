@@ -32,21 +32,21 @@ df <- tibble(
 
 
 # function call -----------------------------------------------------------
+tblr(
+  df,
+  type = "draft",
+  booktabs = FALSE,
+  caption = "blah",
+  interface = list(width = "\\linewidth")
+) |> tblr_as_latex() |> writeLines()
+
 tblr(df) |> attributes()
 tblr(df, interface = list("colspec" = "cccc")) |> attributes()
 tblr(df, options = list(caption = "blah")) |> tblr_as_latex() |> writeLines()
 tblr(df, options = list(caption = "blah"), caption = "take me instead!") |> tblr_as_latex() |> writeLines()
 
-# glue --------------------------------------------------------------------
-
-x <- "\\centering"
-y <- "\\begin{booktabs}"
-z <- "{colspec=lrr}"
-w <- NULL
-glue::glue("
-           {x}{w}
-           {y}{z}
-           ")
+intf <- tblr(df, interface = list(colspec = "lll", width = "\\linewidth")) |> 
+  attr("interface")
 
 
 # gt syntax ---------------------------------------------------------------
