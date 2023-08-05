@@ -2,7 +2,7 @@ tblr <- function(df,
                  type = "float",
                  booktabs = TRUE,
                  caption = NULL,
-                 source_note = NULL,
+                 source_notes = NULL,
                  col_names = NULL,
                  interface = list(),
                  options = list()) {
@@ -21,8 +21,17 @@ tblr <- function(df,
     interface$colspec <- natural_colspec
   }
   
-  # store caption in options
+  # replace options with shortcut arguments
   if (!is_null(caption)) options$caption <- caption
+  
+  if (!is_null(source_notes)) {
+    replacements <- set_names(
+      source_notes,
+      str_c("remark", enclose_curly(names(source_notes)))
+    )
+    options <- purrr::list_assign(options, !!!replacements)
+  }
+  
   
   # find positions of text-like columns (only those will be escaped)
   df <- df |> mutate(across(where(is.factor), as.character))
@@ -33,7 +42,6 @@ tblr <- function(df,
     class = c("tblr", "tbl_df", "tbl", "data.frame"),
     type = type,
     booktabs = booktabs,
-    source_note = source_note,
     col_names = col_names,
     interface = interface,
     options = options,

@@ -34,6 +34,14 @@ df <- tibble(
 # function call -----------------------------------------------------------
 tblr(
   df,
+  caption = "A caption",
+  source_notes = c(Notes = "Values in million USD.", Sources = "Own work and that of my colleagues.")
+) |> 
+ tblr_as_latex() |> 
+  writeLines()
+
+tblr(
+  df,
   type = "draft",
   booktabs = FALSE,
   caption = "blah",

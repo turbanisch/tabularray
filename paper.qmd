@@ -38,7 +38,8 @@ or surgical instruments and apparatus; parts and accessories"
 tblr(
   df,
   caption = "Top 15 Aid Export Products (Million US\\$, HS2 level), 2017–2021",
-  source_note = "Data from GACC (2022).",
+  source_note = c(Note = "Export values are in million US\\$.",
+                  Source = "Data from GACC (2022)."),
   interface = list(colspec = "rX[l]r")
 ) |>
   mutate(Value = gt::vec_fmt_number(Value,
