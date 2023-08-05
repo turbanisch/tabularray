@@ -2,17 +2,21 @@ tblr <- function(df,
                  caption = NULL,
                  source_note = NULL,
                  col_names = NULL,
-                 interface = NULL) {
+                 interface = list(),
+                 options = list()) {
   # escape column names for latex
   if (is_null(col_names)) {
     col_names <- gt::escape_latex(colnames(df))
   }
   
-  # generate and append colspec if not specified in options
+  # generate and append colspec if not specified in interface
   if (is_null(interface$colspec)) {
     natural_colspec <- if_else(map_lgl(df, is.numeric), "r", "l") |> str_flatten()
     interface$colspec <- natural_colspec
   }
+  
+  # store caption in options
+  if (!is_null(caption)) options$caption <- caption
   
   # find positions of character columns (only those will be escaped)
   character_column_indices <- which(map_lgl(df, is.character))
@@ -20,10 +24,10 @@ tblr <- function(df,
   structure(
     df,
     class = c("tblr", "tbl_df", "tbl", "data.frame"),
-    caption = caption,
     source_note = source_note,
     col_names = col_names,
     interface = interface,
+    options = options,
     character_column_indices = character_column_indices
   )
 }
@@ -64,7 +68,7 @@ tblr_as_latex <- function(x) {
     "\\end{booktabs}"
   ) |> str_flatten(collapse = "\n")
   
-  caption_line <- if (!is_null(attr(x, "caption"))) str_c("\\caption{", attr(x, "caption"), "}") else NULL
+  caption_line <- if (!is_null(attr(x, "options")$caption)) str_c("\\caption{", attr(x, "options")$caption, "}") else NULL
   
   # enclose in table environment
   out <- str_c(

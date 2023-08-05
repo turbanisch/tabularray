@@ -23,6 +23,12 @@ or surgical instruments and apparatus; parts and accessories"
 )
 
 
+# function call -----------------------------------------------------------
+
+tblr(df, interface = list("colspec" = "cccc")) |> attributes()
+tblr(df, options = list(caption = "blah")) |> tblr_as_latex() |> writeLines()
+tblr(df, options = list(caption = "blah"), caption = "take me instead!") |> tblr_as_latex() |> writeLines()
+
 # glue --------------------------------------------------------------------
 
 x <- "\\centering"
