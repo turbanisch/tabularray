@@ -1,3 +1,7 @@
+# derived files
+*.tex
+*.pdf
+
 # History files
 .Rhistory
 .Rapp.history
@@ -47,3 +51,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# MacOS system files
+.DS_Store
