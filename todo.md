@@ -1,1 +1,9 @@
 - replace TRUE and FALSE with checkmark
+- implement options and interface as list of character *vectors* to allow entries like `vlines = {1,3,5}{dashed},`, i.e. `options = list(vlines = c("1,3,5", "dashed"))`
+- add colspec shortcut
+- enclose numeric values with $
+- test formatting with dates
+- reduce font size in table notes
+- make knitr include `\usepackage{tabularray}` etc. automatically in preamble
+- align column heads with line breaks to bottom
+- center column heads over numeric values (or all narrow columns?). The stub head should always be left-aligned: 3.71
