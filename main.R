@@ -22,9 +22,17 @@ or surgical instruments and apparatus; parts and accessories"
   Value = c(806123123.23, 543015442)
 )
 
+# multiple column types
+df <- tibble(
+  model = c("Mazda", "Mercedes $4", "Audi", "Hyunday"),
+  badass = c(TRUE, TRUE, FALSE, TRUE),
+  cyl = c(4L, 6L, 6L, 4L),
+  type = factor(c("SUV", "Sports & car", "SUV", "Sports & car"))
+)
+
 
 # function call -----------------------------------------------------------
-
+tblr(df) |> attributes()
 tblr(df, interface = list("colspec" = "cccc")) |> attributes()
 tblr(df, options = list(caption = "blah")) |> tblr_as_latex() |> writeLines()
 tblr(df, options = list(caption = "blah"), caption = "take me instead!") |> tblr_as_latex() |> writeLines()

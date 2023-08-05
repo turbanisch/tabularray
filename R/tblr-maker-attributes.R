@@ -18,7 +18,8 @@ tblr <- function(df,
   # store caption in options
   if (!is_null(caption)) options$caption <- caption
   
-  # find positions of character columns (only those will be escaped)
+  # find positions of text-like columns (only those will be escaped)
+  df <- df |> mutate(across(where(is.factor), as.character))
   character_column_indices <- which(map_lgl(df, is.character))
   
   structure(
