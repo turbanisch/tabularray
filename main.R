@@ -16,8 +16,7 @@ df <- tibble(
   HS2 = c("30", "90"),
   Description = c(
     "Pharmaceutical products",
-    "Optical, photographic, cinematographic, measuring, checking, medical
-or surgical instruments and apparatus; parts and accessories"
+    "Optical, photographic, cinematographic, measuring, checking, medical or surgical instruments and apparatus; parts and accessories"
   ),
   Value = c(806123123.23, 543015442)
 )
