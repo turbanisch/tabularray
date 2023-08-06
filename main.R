@@ -41,7 +41,7 @@ tblr(
 
 tblr(
   df,
-  type = "draft",
+  type = "simple",
   booktabs = FALSE,
   caption = "blah",
   interface = list(width = "\\linewidth")

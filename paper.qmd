@@ -58,7 +58,7 @@ col_type_df <- tibble(
 tblr(
   col_type_df,
   col_names = c("Model", "Badass", "Cylinder", "{Type\\\\(of car)}"),
-  type = "draft",
+  type = "simple",
   booktabs = FALSE
 )
 ```

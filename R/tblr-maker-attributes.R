@@ -1,6 +1,6 @@
 #' documentation
-#' type: The type of LaTeX table environment. This can be either "float" (the default), "draft", or "break". The corresponding LaTeX environments defined in the **tabularray** package are "talltblr", "tblr", and "longtblr". "float" produces a floating numbered table that accommodates both a caption and table notes, similar to a "threeparttable" in LaTeX. "draft" produces an unnumbered and untitled table intended for simple tabular matter to appear in the run of the text (see CMOS 3.51). "break" produces a numbered table that can be broken across pages instead of floating. It accommodates both a caption and table notes, similar to a "longtable" in LaTeX. Could use table: float + draft + break ~ tabularray environment + traditional LaTeX environment + Description
-#' booktabs: Should tables be formatted with booktabs styling? This setting modifies the thickness of rules (horizontal borders) and spacing between lines. If `TRUE` (the default), the booktabs versions of the LaTeX table environments corresponding to "type" will be used. These are "talltabs", "booktabs", and "longtabs". Could use table: plain + booktabs ~ float + draft + break
+#' type: The type of LaTeX table environment. This can be either "float" (the default), "simple", or "break". The corresponding LaTeX environments defined in the **tabularray** package are "talltblr", "tblr", and "longtblr". "float" produces a floating numbered table that accommodates both a caption and table notes, similar to a "threeparttable" in LaTeX. "simple" produces an unnumbered and untitled table intended for simple tabular matter to appear in the run of the text (see CMOS 3.51). "break" produces a numbered table that can be broken across pages instead of floating. It accommodates both a caption and table notes, similar to a "longtable" in LaTeX. Could use table: float + simple + break ~ tabularray environment + traditional LaTeX environment + Description
+#' booktabs: Should tables be formatted with booktabs styling? This setting modifies the thickness of rules (horizontal borders) and spacing between lines. If `TRUE` (the default), the booktabs versions of the LaTeX table environments corresponding to "type" will be used. These are "talltabs", "booktabs", and "longtabs". Could use table: plain + booktabs ~ float + simple + break
 
 tblr <- function(df,
                  type = "float",
@@ -11,8 +11,8 @@ tblr <- function(df,
                  interface = list(),
                  options = list()) {
   # sanity checks
-  type <- match.arg(type, c("draft", "float", "break"))
-  if (type != "draft") stopifnot(!is_null(caption) || !is_null(options$caption)) # types other than draft need caption
+  type <- match.arg(type, c("simple", "float", "break"))
+  if (type != "simple") stopifnot(!is_null(caption) || !is_null(options$caption)) # types other than simple need caption
   
   # escape column names for latex
   if (is_null(col_names)) {
@@ -75,7 +75,7 @@ tblr_as_latex <- function(x) {
   options <- format_key_value_pairs(attr(x, "options"))
   
   # choose environment based on type and booktabs
-  if (attr(x, "type") == "draft") {
+  if (attr(x, "type") == "simple") {
     env <- if (attr(x, "booktabs")) "booktabs" else "tblr"
   } else if (attr(x, "type") == "float") {
     env <- if (attr(x, "booktabs")) "talltabs" else "talltblr"
@@ -94,8 +94,8 @@ tblr_as_latex <- function(x) {
     bottomrule <- "\\hline"
   }
   
-  # choose template based on type (draft table does not have options)
-  if (attr(x, "type") == "draft") {
+  # choose template based on type (simple table does not have options)
+  if (attr(x, "type") == "simple") {
     template <- "
     \\begin{center}
     \\begin{<env>}{
