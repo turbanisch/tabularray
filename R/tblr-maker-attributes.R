@@ -6,37 +6,24 @@
 tblr <- function(df,
                  type = "simple",
                  booktabs = TRUE,
-                 caption = NULL,
-                 source_notes = NULL,
-                 col_names = NULL,
-                 interface = list(),
-                 options = list()) {
+                 caption = NULL) {
   # sanity checks
   type <- match.arg(type, c("simple", "float", "break"))
-  if (type != "simple") stopifnot(!is_null(caption) || !is_null(options$caption)) # types other than simple need caption
+  if (type != "simple") stopifnot(!is_null(caption))
+  
+  # initialize "interface" and "options" 
+  interface <- list()
+  options <- list()
   
   # escape column names for latex
-  if (is_null(col_names)) {
-    col_names <- gt::escape_latex(colnames(df))
-  }
+  col_names <- gt::escape_latex(colnames(df))
   
-  # generate and append colspec if not specified in interface
-  if (is_null(interface$colspec)) {
-    natural_colspec <- if_else(map_lgl(df, is.numeric), "r", "l") |> str_flatten()
-    interface$colspec <- natural_colspec
-  }
+  # generate interface list and populate with colspec
+  natural_colspec <- if_else(map_lgl(df, is.numeric), "r", "l") |> str_flatten()
+  interface$colspec = natural_colspec
   
   # replace options with shortcut arguments
   if (!is_null(caption)) options$caption <- caption
-  
-  if (!is_null(source_notes)) {
-    replacements <- set_names(
-      source_notes,
-      str_c("remark", enclose_curly(names(source_notes)))
-    )
-    options <- purrr::list_assign(options, !!!replacements)
-  }
-  
   
   # find positions of text-like columns (only those will be escaped)
   df <- df |> mutate(across(where(is.factor), as.character))

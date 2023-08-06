@@ -2,8 +2,8 @@
 - enclose numeric values with $ or \num{}
 
 # general feature enhancements
+- add setter functions, e.g., `set_options()`, `set_interface()`, `set_colspec()`, `add_sourcenote()`.
 - experiment with storing formatting functions and column types in df
-- outsource anything that is not necessary from `tblr()` into other functions, e.g., `set_options()`, `set_interface()`, `set_colspec()`, `add_sourcenote()`.
 - implement column spanners
 - implement grouping
 - replace TRUE and FALSE with checkmark

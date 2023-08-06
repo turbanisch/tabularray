@@ -31,29 +31,14 @@ df <- tibble(
 
 
 # function call -----------------------------------------------------------
-tblr(
-  df,
-  caption = "A caption",
-  source_notes = c(Notes = "Values in million USD.", Sources = "Own work and that of my colleagues.")
-) |> 
- tblr_as_latex() |> 
-  writeLines()
 
-tblr(
-  df,
-  type = "simple",
-  booktabs = FALSE,
-  caption = "blah",
-  interface = list(width = "\\linewidth")
-) |> tblr_as_latex() |> writeLines()
-
-tblr(df) |> attributes()
-tblr(df, interface = list("colspec" = "cccc")) |> attributes()
-tblr(df, options = list(caption = "blah")) |> tblr_as_latex() |> writeLines()
-tblr(df, options = list(caption = "blah"), caption = "take me instead!") |> tblr_as_latex() |> writeLines()
-
-intf <- tblr(df, interface = list(colspec = "lll", width = "\\linewidth")) |> 
-  attr("interface")
+tblr(df)
+tblr(df, type = "float", caption = "A table.") |> 
+  set_interface(
+    hlines = character(0),
+    vlines = c("1,3,5", "dashed"),
+    rows = "7mm"
+  ) |> unclass()
 
 
 # gt syntax ---------------------------------------------------------------
