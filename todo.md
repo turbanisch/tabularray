@@ -7,3 +7,4 @@
 - make knitr include `\usepackage{tabularray}` etc. automatically in preamble
 - align column heads with line breaks to bottom
 - center column heads over numeric values (or all narrow columns?). The stub head should always be left-aligned: 3.71
+- outsource anything that is not necessary from `tblr()` into other functions, e.g., `set_options()`, `set_interface()`, `set_colspec()`, `add_sourcenote()`.
