@@ -37,6 +37,7 @@ or surgical instruments and apparatus; parts and accessories"
 
 tblr(
   df,
+  type = "float",
   caption = "Top 15 Aid Export Products (Million US\\$, HS2 level), 2017–2021",
   source_note = c(Note = "Export values are in million US\\$.",
                   Source = "Data from GACC (2022)."),
@@ -58,7 +59,6 @@ col_type_df <- tibble(
 tblr(
   col_type_df,
   col_names = c("Model", "Badass", "Cylinder", "{Type\\\\(of car)}"),
-  type = "simple",
   booktabs = FALSE
 )
 ```
