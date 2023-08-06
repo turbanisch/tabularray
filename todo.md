@@ -1,6 +1,5 @@
 # bugs
 - enclose numeric values with $ or \num{}
-- implement options and interface as list of character *vectors* to allow entries like `vlines = {1,3,5}{dashed},`, i.e. `options = list(vlines = c("1,3,5", "dashed"))`
 
 # general feature enhancements
 - experiment with storing formatting functions and column types in df
