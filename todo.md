@@ -16,6 +16,11 @@
 - or use actual values from modelsummary object: `x <- modelsummary::modelsummary(lm.D9, output = "modelsummary_list") |> unclass()`
 - implement panels
 
+# tests and error messages
+- check length of column headers and column specification
+- inform that certain properties don't appear in simple tables, such as captions and source notes
+- write unit tests
+
 # appearance & minor tweaks
 - test including a citekey in notes
 - test formatting with dates
