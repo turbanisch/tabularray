@@ -1,0 +1,2 @@
+mtcars |> 
+  split(~cyl)
