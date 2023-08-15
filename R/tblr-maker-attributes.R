@@ -53,7 +53,7 @@ tblr_as_latex <- function(x) {
     mutate(across(attr(x, "character_column_indices"), gt::escape_latex)) |> 
     mutate(across(
       .cols = where(\(x) !is.character(x)),
-      .fns = \(x) format(x, trim = TRUE)
+      .fns = \(x) format(x, digits = 2L, trim = TRUE)
     )) |>
     collapse_rows() |> 
     str_flatten(collapse = "\n")
