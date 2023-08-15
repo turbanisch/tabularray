@@ -114,7 +114,7 @@ tblr_as_latex <- function(x) {
   }
   
   # merge variables into template
-  out <- stick(template)
+  out <- stick(template, .null = NULL)
 
   # assign class "knit_asis"
   knitr::asis_output(out)

@@ -12,13 +12,14 @@ append_line_break <- function(s) {
   str_c(s, line_break)
 }
 
+# paste character vectors stored in a list (e.g., a dataframe), output is character vector
 collapse_rows <- function(l) {
   do.call(\(...) str_c(..., sep = " & "), l) |> 
     append_line_break()
 }
 
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {
-  glue::glue(..., .open = .open, .close = .close, .envir = .envir, .null = NULL)
+  glue::glue(..., .open = .open, .close = .close, .envir = .envir)
 }
 
 format_key_value_pairs <- function(named_list) {
