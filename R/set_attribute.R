@@ -13,7 +13,7 @@
 #   rows = {7mm}, columns = {15mm,c}
 # }
 
-# assign key-value pairs as elements of list stored in attribute
+# assign key-value pairs as elements of list stored in attribute 
 
 # main function -----------------------------------------------------------
 
@@ -46,16 +46,4 @@ set_options <- function(x, ...) {
 
 set_source_notes <- function(x, ...) {
   set_list_attribute(x, "options", names_prefix = "remark", ...)
-}
-
-set_colspec <- function(x, colspec) {
-  set_list_attribute(x, "interface", colspec = colspec)
-}
-
-
-# set non-list attributes -------------------------------------------------
-
-set_column_headers <- function(x, column_headers) {
-  attr(x, "col_names") <- column_headers
-  return(x)
 }

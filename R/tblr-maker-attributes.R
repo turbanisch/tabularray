@@ -11,46 +11,72 @@ tblr <- function(df,
   type <- match.arg(type, c("simple", "float", "break"))
   if (type != "simple") stopifnot(!is_null(caption))
   
+  # convert factor to character (to unify "text-like" column types)
+  df <- df |> mutate(across(where(is.factor), as.character))
+  
   # initialize "interface" and "options" 
   interface <- list()
   options <- list()
   
-  # escape column names for latex
-  col_names <- gt::escape_latex(colnames(df))
+  # identify group column (if any)
+  stopifnot(length(group_vars(df)) <= 1L)
+  is_group_var <- colnames(df) %in% group_vars(df)
+  col_type <- if_else(is_group_var, "group", "default")
   
-  # generate interface list and populate with colspec
-  natural_colspec <- if_else(map_lgl(df, is.numeric), "r", "l") |> str_flatten()
-  interface$colspec = natural_colspec
-  
-  # replace options with shortcut arguments
-  if (!is_null(caption)) options$caption <- caption
+  # guess alignment based on column type
+  alignment <- if_else(map_lgl(df, is.numeric), "r", "l")
   
   # find positions of text-like columns (only those will be escaped)
-  df <- df |> mutate(across(where(is.factor), as.character))
-  character_column_indices <- which(map_lgl(df, is.character))
+  is_text <- map_lgl(df, is.character)
+  
+  # make boxhead
+  boxhead <- tibble(
+    variable = colnames(df),
+    type = col_type,
+    alignment = alignment,
+    label = gt::escape_latex(colnames(df)),
+    is_text = is_text
+  )
+  
+  # save caption in options if provided
+  if (!is_null(caption)) options$caption <- caption
   
   structure(
     df,
     class = c("tblr", "tbl_df", "tbl", "data.frame"),
     type = type,
     booktabs = booktabs,
-    col_names = col_names,
+    boxhead = boxhead,
     interface = interface,
-    options = options,
-    character_column_indices = character_column_indices
+    options = options
   )
 }
 
 tblr_as_latex <- function(x) {
   
+  # add shortcuts to attributes
+  type = attr(x, "type")
+  booktabs = attr(x, "booktabs")
+  boxhead = attr(x, "boxhead")
+  interface = attr(x, "interface")
+  options = attr(x, "options")
+  
   # collapse header
-  header <- attr(x, "col_names") |> 
+  header <- boxhead |> 
+    pull(label) |> 
     as.list() |> 
     collapse_rows()
   
   # collapse body
+  text_column_names <- boxhead |> 
+    filter(is_text) |> 
+    pull(variable)
+  
   body <- x |>
-    mutate(across(attr(x, "character_column_indices"), gt::escape_latex)) |> 
+    mutate(across(
+      all_of(text_column_names), 
+      gt::escape_latex
+    )) |> 
     mutate(across(
       .cols = where(\(x) !is.character(x)),
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
@@ -58,21 +84,28 @@ tblr_as_latex <- function(x) {
     collapse_rows() |> 
     str_flatten(collapse = "\n")
   
-  # format list arguments
-  interface <- format_key_value_pairs(attr(x, "interface"))
-  options <- format_key_value_pairs(attr(x, "options"))
+  # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
+  stopifnot(!"colspec" %in% names(interface))
+  colspec <- boxhead |> 
+    pull(alignment) |> 
+    str_flatten()
+  interface <- c(list(colspec = colspec), interface)
+  
+  # format key-value pairs in "interface" and "options"
+  interface <- format_key_value_pairs(interface)
+  options <- format_key_value_pairs(options)
   
   # choose environment based on type and booktabs
-  if (attr(x, "type") == "simple") {
-    env <- if (attr(x, "booktabs")) "booktabs" else "tblr"
-  } else if (attr(x, "type") == "float") {
-    env <- if (attr(x, "booktabs")) "talltabs" else "talltblr"
+  if (type == "simple") {
+    env <- if (booktabs) "booktabs" else "tblr"
+  } else if (type == "float") {
+    env <- if (booktabs) "talltabs" else "talltblr"
   } else {
-    env <- if (attr(x, "booktabs")) "longtabs" else "longtblr"
+    env <- if (booktabs) "longtabs" else "longtblr"
   }
   
   # choose rules based on booktabs
-  if (attr(x, "booktabs")) {
+  if (booktabs) {
     toprule <- "\\toprule"
     midrule <- "\\midrule"
     bottomrule <- "\\bottomrule"
@@ -83,7 +116,7 @@ tblr_as_latex <- function(x) {
   }
   
   # choose template based on type (simple table does not have options)
-  if (attr(x, "type") == "simple") {
+  if (type == "simple") {
     template <- "
     \\begin{center}
     \\addtolength{\\leftskip}{-2cm}

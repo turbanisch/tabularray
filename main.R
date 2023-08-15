@@ -34,7 +34,6 @@ df <- tibble(
 
 tblr(df)
 tblr(df, type = "float", caption = "A table.") |> 
-  set_column_headers(letters[1:3]) |> 
   set_source_notes(
     Source = "My own work",
     Notes = "All values in million US\\$"
@@ -44,7 +43,7 @@ tblr(df, type = "float", caption = "A table.") |>
     vlines = c("1,3,5", "dashed"),
     rows = "7mm"
   ) |> 
-  set_colspec("aösldfkjaö")
+  set_alignment(!Value, "c")
 
 
 # gt syntax ---------------------------------------------------------------
