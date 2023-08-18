@@ -8,7 +8,7 @@ tblr <- function(df,
                  booktabs = TRUE,
                  caption = NULL) {
   # sanity checks
-  type <- match.arg(type, c("simple", "float", "break"))
+  type <- rlang::arg_match(type, c("simple", "float", "break"))
   if (type != "simple") stopifnot(!is_null(caption))
   
   # convert factor to character (to unify "text-like" column types)
