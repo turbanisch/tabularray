@@ -8,6 +8,9 @@
 # 
 # tblr(df) |> 
 #   set_alignment(value = "X", starts_with("c") ~ "c")
+# 
+# tblr(df) |> 
+#   set_column_labels(value = "\\textbf{Value}", ends_with("y") ~ "COUNTRY")
 
 
 # main function -----------------------------------------------------------
@@ -46,4 +49,8 @@ set_boxhead_property <- function(df, property, ...) {
 
 set_alignment <- function(df, ...) {
   set_boxhead_property(df = df, property = "alignment", ...)
+}
+
+set_column_labels <- function(df, ...) {
+  set_boxhead_property(df = df, property = "label", ...)
 }
