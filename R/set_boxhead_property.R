@@ -20,12 +20,15 @@ set_boxhead_property <- function(df, property, ...) {
   for (i in seq_along(kwargs)) {
     
     if (rlang::is_formula(kwargs[[i]])) {
+      # interpret LHS as tidy-select if element is a formula
+      # no need to use `enquo()`, LHS is already a symbol
       expr <-  rlang::f_lhs(kwargs[[i]])
       target_col_positions <- tidyselect::eval_select(expr, data = df)
       target_col_names <- names(target_col_positions)
-      
-      replacement <- kwargs[[i]] |> rlang::f_rhs()
+      replacement <- rlang::f_rhs(kwargs[[i]])
     } else {
+      # otherwise interpret as named list element
+      # note that names are a property of the entire list, not of an individual element
       target_col_names <- names(kwargs)[i]
       replacement <- kwargs[[i]]
     }
