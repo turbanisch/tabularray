@@ -61,12 +61,29 @@ tblr_as_latex <- function(x) {
   interface = attr(x, "interface")
   options = attr(x, "options")
   
+  # set defaults for theme options: hardcoded for now
+  row_group_style <- "left"
+  remove_global_indent <- FALSE
+  
+  if (row_group_style == "left") {
+    # left: group headings left-aligned, ordinary rows indented by an empty column
+    group_head_alignment <- "l"
+    indent_ordinary_rows <- TRUE
+    remove_global_indent <- TRUE
+  } else {
+    # center: group headings centered, ordinary rows not indented
+    group_head_alignment <- "c"
+    indent_ordinary_rows <- FALSE
+  }
+  
   # collapse header
   header <- boxhead |> 
     filter(type == "default") |> 
     pull(label) |> 
     as.list() |> 
     collapse_rows()
+  
+  if (indent_ordinary_rows) header <- str_c("& ", header)
   
   # collapse body
   text_column_names <- boxhead |> 
@@ -99,8 +116,8 @@ tblr_as_latex <- function(x) {
       nest(.by = all_of(group_column_name))
     
     nested_chr <- nested |> 
-      mutate(across(1, \(s) format_group_heads(s, n_default_columns))) |> 
-      mutate(data = map_chr(data, collapse_row_block))
+      mutate(across(1, \(s) format_group_heads(s, n_spanned_columns = (n_default_columns + indent_ordinary_rows), colspec = group_head_alignment))) |> 
+      mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = indent_ordinary_rows)))
     
     body <- nested_chr |> 
       as.list() |>
@@ -115,6 +132,8 @@ tblr_as_latex <- function(x) {
     filter(type == "default") |> 
     pull(alignment) |> 
     str_flatten()
+  if (indent_ordinary_rows) colspec <- str_c("l", colspec)
+  if (remove_global_indent) colspec <- str_c("@{}", colspec, "@{}")
   interface <- c(list(colspec = colspec), interface)
   
   # format key-value pairs in "interface" and "options"

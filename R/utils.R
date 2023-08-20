@@ -8,6 +8,10 @@ enclose_square <- function(s) {
   str_c("[", s, "]")
 }
 
+str_prepend <- function(prefix, s) {
+  str_c(prefix, s)
+}
+
 append_line_break <- function(s) {
   str_c(s, line_break)
 }
@@ -19,14 +23,14 @@ collapse_rows <- function(l) {
 }
 
 # collapse rows and flatten into a single character vector
-collapse_row_block <- function(df) {
-  df |> 
-    collapse_rows() |> 
-    str_flatten(collapse = "\n")
+collapse_row_block <- function(df, add_indent_col = FALSE) {
+  row_vector <- collapse_rows(df)
+  if (add_indent_col) row_vector <- str_c("& ", row_vector)
+  str_flatten(row_vector, collapse = "\n")
 }
 
-format_group_heads <- function(s, n_spanned_columns) {
-  stick("\\SetCell[c=<n_spanned_columns>]{l} \\textbf{<s>}<line_break>")
+format_group_heads <- function(s, n_spanned_columns, colspec = "l") {
+  stick("\\SetCell[c=<n_spanned_columns>]{<colspec>} \\textbf{<s>}<line_break>")
 }
 
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {
