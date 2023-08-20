@@ -18,6 +18,17 @@ collapse_rows <- function(l) {
     append_line_break()
 }
 
+# collapse rows and flatten into a single character vector
+collapse_row_block <- function(df) {
+  df |> 
+    collapse_rows() |> 
+    str_flatten(collapse = "\n")
+}
+
+format_group_heads <- function(s, n_spanned_columns) {
+  stick("\\SetCell[c=<n_spanned_columns>]{l} \\textbf{<s>}<line_break>")
+}
+
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {
   glue::glue(..., .open = .open, .close = .close, .envir = .envir)
 }

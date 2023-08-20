@@ -29,6 +29,10 @@ df <- tibble(
   type = factor(c("SUV", "Sports & car", "SUV", "Sports & car"))
 )
 
+df |> 
+  ungroup() |>
+  tblr()
+
 
 # function call -----------------------------------------------------------
 

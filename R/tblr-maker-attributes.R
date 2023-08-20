@@ -63,30 +63,56 @@ tblr_as_latex <- function(x) {
   
   # collapse header
   header <- boxhead |> 
+    filter(type == "default") |> 
     pull(label) |> 
     as.list() |> 
     collapse_rows()
   
   # collapse body
   text_column_names <- boxhead |> 
-    filter(is_text) |> 
+    filter(is_text, type == "default") |> 
     pull(variable)
   
-  body <- x |>
+  group_column_name <- boxhead |> 
+    filter(type == "group") |> 
+    pull(variable)
+  
+  n_default_columns <- sum(boxhead$type == "default")
+  
+  x_chr <- x |>
+    # interpret any text that was in the dataset before tblr() was called as *not* formatted for LaTeX -> escape
     mutate(across(
       all_of(text_column_names), 
       gt::escape_latex
     )) |> 
+    # convert any remaining non-text columns to text at the end
     mutate(across(
       .cols = where(\(x) !is.character(x)),
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
-    )) |>
-    collapse_rows() |> 
-    str_flatten(collapse = "\n")
+    ))
   
+  if (is_empty(group_column_name)) {
+  body <- x_chr |>
+    collapse_row_block()
+  } else {
+    nested <- x_chr |> 
+      nest(.by = all_of(group_column_name))
+    
+    nested_chr <- nested |> 
+      mutate(across(1, \(s) format_group_heads(s, n_default_columns))) |> 
+      mutate(data = map_chr(data, collapse_row_block))
+    
+    body <- nested_chr |> 
+      as.list() |>
+      list_transpose() |>
+      list_c() |>
+      str_flatten(collapse = "\n") 
+  }
+
   # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
   stopifnot(!"colspec" %in% names(interface))
   colspec <- boxhead |> 
+    filter(type == "default") |> 
     pull(alignment) |> 
     str_flatten()
   interface <- c(list(colspec = colspec), interface)
