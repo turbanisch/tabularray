@@ -16,10 +16,12 @@ tblr_as_latex <- function(x) {
     group_head_alignment <- "l"
     indent_ordinary_rows <- TRUE
     remove_global_indent <- TRUE
+    row_block_sep <- "\\addlinespace" # could be `midrule` (defined below) or NA (=none)
   } else {
     # center: group headings centered, ordinary rows not indented
     group_head_alignment <- "c"
     indent_ordinary_rows <- FALSE
+    row_block_sep <- NA # no separator
   }
   
   # collapse header
@@ -55,23 +57,30 @@ tblr_as_latex <- function(x) {
     ))
   
   if (is_empty(group_column_name)) {
-  body <- x_chr |>
-    collapse_row_block()
+    body <- x_chr |>
+      collapse_row_block()
   } else {
+    separator_column <- c(rep(row_block_sep, times = nrow(nested) - 1), NA)
+    
     nested <- x_chr |> 
-      nest(.by = all_of(group_column_name))
+      nest(.by = all_of(group_column_name)) |> 
+      add_column(separator_column)
     
     nested_chr <- nested |> 
-      mutate(across(1, \(s) format_group_heads(s, n_spanned_columns = (n_default_columns + indent_ordinary_rows), colspec = group_head_alignment))) |> 
+      mutate(across(1, \(s) format_group_heads(
+        s, 
+        n_spanned_columns = (n_default_columns + indent_ordinary_rows), 
+        colspec = group_head_alignment
+      ))) |> 
       mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = indent_ordinary_rows)))
     
     body <- nested_chr |> 
       as.list() |>
       list_transpose() |>
       list_c() |>
-      str_flatten(collapse = "\n") 
+      str_flatten(collapse = "\n", na.rm = TRUE) 
   }
-
+  
   # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
   stopifnot(!"colspec" %in% names(interface))
   colspec <- boxhead |> 
@@ -145,7 +154,7 @@ tblr_as_latex <- function(x) {
   
   # merge variables into template
   out <- stick(template, .null = NULL)
-
+  
   # assign class "knit_asis"
   knitr::asis_output(out)
 }
