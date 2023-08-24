@@ -10,6 +10,7 @@ tblr_as_latex <- function(x) {
   # set defaults for theme options: hardcoded for now
   row_group_style <- "left"
   remove_global_indent <- FALSE
+  indent_ordinary_rows <- FALSE
   
   if (row_group_style == "left") {
     # left: group headings left-aligned, ordinary rows indented by an empty column
@@ -20,7 +21,6 @@ tblr_as_latex <- function(x) {
   } else {
     # center: group headings centered, ordinary rows not indented
     group_head_alignment <- "c"
-    indent_ordinary_rows <- FALSE
     row_block_sep <- NA # no separator
   }
   
@@ -56,7 +56,7 @@ tblr_as_latex <- function(x) {
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
     ))
   
-  if (is_empty(group_column_name)) {
+  if (is_grouped_df(x)) {
     body <- x_chr |>
       collapse_row_block()
   } else {

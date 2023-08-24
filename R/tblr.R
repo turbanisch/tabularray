@@ -43,7 +43,8 @@ tblr <- function(df,
   
   structure(
     df,
-    class = c("tblr", "tbl_df", "tbl", "data.frame"),
+    # inherit classes of dataframe (e.g., grouping structure)
+    class = c("tblr", class(df)),
     type = type,
     booktabs = booktabs,
     boxhead = boxhead,
