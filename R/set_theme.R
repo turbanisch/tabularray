@@ -1,8 +1,8 @@
 
 # examples ----------------------------------------------------------------
 
-x |> set_theme(row_group_style = "center") |> unclass() |> attr("theme")
-x |> set_theme(row_group_head_fontstyle = "\\textit")
+# x |> set_theme(row_group_style = "center") |> unclass() |> attr("theme")
+# x |> set_theme(row_group_head_fontstyle = "\\textit")
 
 # main function -----------------------------------------------------------
 

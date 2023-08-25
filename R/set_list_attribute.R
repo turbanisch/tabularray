@@ -10,7 +10,7 @@
 # {
 #   hlines, 
 #   vlines = {1, 3, 5}{dashed},
-#   rows = {7mm}, columns = {15mm,c}
+#   rows = {7mm}
 # }
 
 # assign key-value pairs as elements of list stored in attribute 
