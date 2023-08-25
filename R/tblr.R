@@ -5,7 +5,6 @@
 
 tblr <- function(df,
                  type = "simple",
-                 booktabs = TRUE,
                  caption = NULL) {
   # sanity checks
   type <- rlang::arg_match(type, c("simple", "float", "break"))
@@ -17,6 +16,16 @@ tblr <- function(df,
   # initialize "interface" and "options" 
   interface <- list()
   options <- list()
+  
+  # set default theme options
+  theme <- list(
+    table_indent = TRUE,
+    table_booktabs = TRUE,
+    row_group_sep = "\\addlinespace",
+    row_group_indent = TRUE,
+    row_group_head_alignment = "l",
+    row_group_head_fontstyle = "\\textbf"
+  )
   
   # identify group column (if any)
   stopifnot(length(group_vars(df)) <= 1L)
@@ -46,9 +55,9 @@ tblr <- function(df,
     # inherit classes of dataframe (e.g., grouping structure)
     class = c("tblr", class(df)),
     type = type,
-    booktabs = booktabs,
     boxhead = boxhead,
     interface = interface,
-    options = options
+    options = options,
+    theme = theme
   )
 }

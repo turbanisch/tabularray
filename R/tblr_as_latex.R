@@ -2,27 +2,10 @@ tblr_as_latex <- function(x) {
   
   # add shortcuts to attributes
   type = attr(x, "type")
-  booktabs = attr(x, "booktabs")
   boxhead = attr(x, "boxhead")
   interface = attr(x, "interface")
   options = attr(x, "options")
-  
-  # set defaults for theme options: hardcoded for now
-  row_group_style <- "left"
-  remove_global_indent <- FALSE
-  indent_ordinary_rows <- FALSE
-  
-  if (row_group_style == "left") {
-    # left: group headings left-aligned, ordinary rows indented by an empty column
-    group_head_alignment <- "l"
-    indent_ordinary_rows <- TRUE
-    remove_global_indent <- TRUE
-    row_block_sep <- "\\addlinespace" # could be `midrule` (defined below) or NA (=none)
-  } else {
-    # center: group headings centered, ordinary rows not indented
-    group_head_alignment <- "c"
-    row_block_sep <- NA # no separator
-  }
+  theme = attr(x, "theme")
   
   # collapse header
   header <- boxhead |> 
@@ -31,15 +14,11 @@ tblr_as_latex <- function(x) {
     as.list() |> 
     collapse_rows()
   
-  if (indent_ordinary_rows) header <- str_c("& ", header)
+  if (is.grouped_df(x) && theme$row_group_indent) header <- str_c("& ", header)
   
   # collapse body
   text_column_names <- boxhead |> 
     filter(is_text, type == "default") |> 
-    pull(variable)
-  
-  group_column_name <- boxhead |> 
-    filter(type == "group") |> 
     pull(variable)
   
   n_default_columns <- sum(boxhead$type == "default")
@@ -56,23 +35,23 @@ tblr_as_latex <- function(x) {
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
     ))
   
-  if (is_grouped_df(x)) {
+  if (!is_grouped_df(x)) {
     body <- x_chr |>
       collapse_row_block()
   } else {
-    separator_column <- c(rep(row_block_sep, times = nrow(nested) - 1), NA)
-    
-    nested <- x_chr |> 
-      nest(.by = all_of(group_column_name)) |> 
-      add_column(separator_column)
+    # use grouping structure to nest, then ungroup to make group column editable
+    nested <- nest(x_chr) |> ungroup()
+    separator_column <- c(rep(theme$row_group_sep, times = nrow(nested) - 1), NA)
+    nested <- nested |> add_column(separator_column)
     
     nested_chr <- nested |> 
       mutate(across(1, \(s) format_group_heads(
         s, 
-        n_spanned_columns = (n_default_columns + indent_ordinary_rows), 
-        colspec = group_head_alignment
+        n_spanned_columns = (n_default_columns + theme$row_group_indent), 
+        colspec = theme$row_group_head_alignment,
+        fontstyle = theme$row_group_head_fontstyle
       ))) |> 
-      mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = indent_ordinary_rows)))
+      mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = theme$row_group_indent)))
     
     body <- nested_chr |> 
       as.list() |>
@@ -87,8 +66,8 @@ tblr_as_latex <- function(x) {
     filter(type == "default") |> 
     pull(alignment) |> 
     str_flatten()
-  if (indent_ordinary_rows) colspec <- str_c("l", colspec)
-  if (remove_global_indent) colspec <- str_c("@{}", colspec, "@{}")
+  if (is_grouped_df(x) && theme$row_group_indent) colspec <- str_c("l", colspec)
+  if (!theme$table_indent) colspec <- str_c("@{}", colspec, "@{}")
   interface <- c(list(colspec = colspec), interface)
   
   # format key-value pairs in "interface" and "options"
@@ -97,15 +76,15 @@ tblr_as_latex <- function(x) {
   
   # choose environment based on type and booktabs
   if (type == "simple") {
-    env <- if (booktabs) "booktabs" else "tblr"
+    env <- if (theme$table_booktabs) "booktabs" else "tblr"
   } else if (type == "float") {
-    env <- if (booktabs) "talltabs" else "talltblr"
+    env <- if (theme$table_booktabs) "talltabs" else "talltblr"
   } else {
-    env <- if (booktabs) "longtabs" else "longtblr"
+    env <- if (theme$table_booktabs) "longtabs" else "longtblr"
   }
   
   # choose rules based on booktabs
-  if (booktabs) {
+  if (theme$table_booktabs) {
     toprule <- "\\toprule"
     midrule <- "\\midrule"
     bottomrule <- "\\bottomrule"

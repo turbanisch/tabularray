@@ -29,8 +29,8 @@ collapse_row_block <- function(df, add_indent_col = FALSE) {
   str_flatten(row_vector, collapse = "\n")
 }
 
-format_group_heads <- function(s, n_spanned_columns, colspec = "l") {
-  stick("\\SetCell[c=<n_spanned_columns>]{<colspec>} \\textbf{<s>}<line_break>")
+format_group_heads <- function(s, n_spanned_columns, colspec = "l", fontstyle = "\\textbf") {
+  stick("\\SetCell[c=<n_spanned_columns>]{<colspec>} <fontstyle>{<s>}<line_break>")
 }
 
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {
