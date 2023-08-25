@@ -15,10 +15,11 @@
 
 # main function -----------------------------------------------------------
 
-set_boxhead_property <- function(df, property, ...) {
+set_boxhead_property <- function(x, property, ...) {
   
+  stop_if_not_tblr(x)
   kwargs <- rlang::list2(...)
-  boxhead <- attr(df, "boxhead")
+  boxhead <- attr(x, "boxhead")
   
   for (i in seq_along(kwargs)) {
     
@@ -26,7 +27,7 @@ set_boxhead_property <- function(df, property, ...) {
       # interpret LHS as tidy-select if element is a formula
       # no need to use `enquo()`, LHS is already a symbol
       expr <-  rlang::f_lhs(kwargs[[i]])
-      target_col_positions <- tidyselect::eval_select(expr, data = df)
+      target_col_positions <- tidyselect::eval_select(expr, data = x)
       target_col_names <- names(target_col_positions)
       replacement <- rlang::f_rhs(kwargs[[i]])
     } else {
@@ -40,17 +41,17 @@ set_boxhead_property <- function(df, property, ...) {
     boxhead[boxhead$variable %in% target_col_names, property] <- replacement
   }
   
-  attr(df, "boxhead") <- boxhead
-  return(df)
+  attr(x, "boxhead") <- boxhead
+  return(x)
 }
 
 
 # wrapper functions -------------------------------------------------------
 
-set_alignment <- function(df, ...) {
-  set_boxhead_property(df = df, property = "alignment", ...)
+set_alignment <- function(x, ...) {
+  set_boxhead_property(x = x, property = "alignment", ...)
 }
 
-set_column_labels <- function(df, ...) {
-  set_boxhead_property(df = df, property = "label", ...)
+set_column_labels <- function(x, ...) {
+  set_boxhead_property(x = x, property = "label", ...)
 }

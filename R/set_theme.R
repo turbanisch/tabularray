@@ -16,6 +16,9 @@ set_theme <- function(
   row_group_head_alignment = NULL,
   row_group_head_fontstyle = NULL
 ) {
+  
+  stop_if_not_tblr(x)
+  
   # turn argument name-value pairs into list (excluding data argument and NULL arguments)
   arg_names <- setdiff(
     names(formals(set_theme)),

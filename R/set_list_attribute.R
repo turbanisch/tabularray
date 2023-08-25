@@ -18,6 +18,8 @@
 # main function -----------------------------------------------------------
 
 set_list_attribute <- function(x, attribute_name, names_prefix = NULL, ...) {
+  
+  stop_if_not_tblr(x)
   dots_list <- rlang::list2(...)
   
   # prefix all names in the list with a common string, e.g. for remark{...}

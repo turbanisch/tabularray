@@ -1,5 +1,7 @@
 tblr_as_latex <- function(x) {
   
+  stop_if_not_tblr(x)
+  
   # add shortcuts to attributes
   type = attr(x, "type")
   boxhead = attr(x, "boxhead")

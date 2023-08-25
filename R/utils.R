@@ -22,6 +22,10 @@ collapse_rows <- function(l) {
     append_line_break()
 }
 
+stop_if_not_tblr <- function(x) {
+  stopifnot("tblr" %in% class(x))
+}
+
 # collapse rows and flatten into a single character vector
 collapse_row_block <- function(df, add_indent_col = FALSE) {
   row_vector <- collapse_rows(df)
