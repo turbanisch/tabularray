@@ -18,15 +18,15 @@
 set_boxhead_property <- function(x, property, ...) {
   
   stop_if_not_tblr(x)
-  kwargs <- rlang::list2(...)
   boxhead <- attr(x, "boxhead")
+  kwargs <- rlang::list2(...)
   
   for (i in seq_along(kwargs)) {
     
     if (rlang::is_formula(kwargs[[i]])) {
       # interpret LHS as tidy-select if element is a formula
       # no need to use `enquo()`, LHS is already a symbol
-      expr <-  rlang::f_lhs(kwargs[[i]])
+      expr <- rlang::f_lhs(kwargs[[i]])
       target_col_positions <- tidyselect::eval_select(expr, data = x)
       target_col_names <- names(target_col_positions)
       replacement <- rlang::f_rhs(kwargs[[i]])
