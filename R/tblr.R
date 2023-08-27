@@ -6,11 +6,12 @@
 tblr <- function(df,
                  type = "simple",
                  caption = NULL) {
+  
   # sanity checks
   type <- rlang::arg_match(type, c("simple", "float", "break"))
   if (type != "simple") stopifnot(!is_null(caption))
   
-  # convert factor to character (to unify "text-like" column types)
+  # convert factor to character (to harmonize "text-like" column types)
   df <- df |> mutate(across(where(is.factor), as.character))
   
   # initialize "interface" and "options" 
@@ -24,7 +25,9 @@ tblr <- function(df,
     row_group_sep = "\\addlinespace",
     row_group_indent = TRUE,
     row_group_head_alignment = "l",
-    row_group_head_fontstyle = "\\textbf"
+    row_group_head_fontstyle = "\\textit",
+    row_group_head_cmidrule = FALSE,
+    row_group_head_skip_stub = FALSE
   )
   
   # identify group column (if any)

@@ -14,7 +14,9 @@ set_theme <- function(
   row_group_style = NULL,
   row_group_indent = NULL,
   row_group_head_alignment = NULL,
-  row_group_head_fontstyle = NULL
+  row_group_head_fontstyle = NULL,
+  row_group_head_cmidrule = NULL,
+  row_group_head_skip_stub = NULL
 ) {
   
   stop_if_not_tblr(x)
@@ -50,14 +52,24 @@ expand_meta_theme_options <- function(arg_vals) {
     replacements <- list(
       row_group_indent = TRUE,
       row_group_head_alignment = "l",
-      row_group_head_fontstyle = "\\textbf"
+      row_group_head_cmidrule = FALSE,
+      row_group_head_skip_stub = FALSE
     )
-  } else {
+  } else if (arg_vals$row_group_style == "center") {
     # center
     replacements <- list(
       row_group_indent = FALSE,
       row_group_head_alignment = "c",
-      row_group_head_fontstyle = "\\textit"
+      row_group_head_cmidrule = FALSE,
+      row_group_head_skip_stub = FALSE
+    )
+  } else {
+    # panel
+    replacements <- list(
+      row_group_indent = FALSE,
+      row_group_head_alignment = "c",
+      row_group_head_cmidrule = TRUE,
+      row_group_head_skip_stub = TRUE
     )
   }
   

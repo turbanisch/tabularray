@@ -49,9 +49,12 @@ tblr_as_latex <- function(x) {
     nested_chr <- nested |> 
       mutate(across(1, \(s) format_group_heads(
         s, 
-        n_spanned_columns = (n_default_columns + theme$row_group_indent), 
+        # un-indent headers only if first column is not skipped (i.e., heading is flush left with table border)
+        span_start = 1 + theme$row_group_head_skip_stub + theme$row_group_head_skip_stub * theme$row_group_indent,
+        span_end = n_default_columns + theme$row_group_indent,
         colspec = theme$row_group_head_alignment,
-        fontstyle = theme$row_group_head_fontstyle
+        fontstyle = theme$row_group_head_fontstyle,
+        cmidrule = theme$row_group_head_cmidrule
       ))) |> 
       mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = theme$row_group_indent)))
     

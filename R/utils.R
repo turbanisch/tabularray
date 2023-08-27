@@ -33,8 +33,26 @@ collapse_row_block <- function(df, add_indent_col = FALSE) {
   str_flatten(row_vector, collapse = "\n")
 }
 
-format_group_heads <- function(s, n_spanned_columns, colspec = "l", fontstyle = "\\textbf") {
-  stick("\\SetCell[c=<n_spanned_columns>]{<colspec>} <fontstyle>{<s>}<line_break>")
+format_group_heads <- function(
+    s, 
+    span_start, 
+    span_end, 
+    colspec = "l", 
+    fontstyle = "\\textbf", 
+    cmidrule = FALSE
+) {
+  
+  n_spanned_columns <- span_end - span_start + 1
+  prefix <- str_flatten(rep("&", times = span_start - 1),
+                        collapse = " ")
+  prefix <- if (is_empty(prefix)) NULL else str_c(prefix, " ")
+  suffix <- if (cmidrule) stick("\\cmidrule{<span_start>-<span_end>}") else NULL
+  
+  stick("<prefix>\\SetCell[c=<n_spanned_columns>]{<colspec>} <fontstyle>{<s>}<line_break>
+        <suffix>", 
+        .null = NULL) |> 
+    # remove trailing line break if suffix is empty
+    str_remove("\\n$")
 }
 
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {
