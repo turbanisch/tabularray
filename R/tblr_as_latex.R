@@ -25,6 +25,8 @@ tblr_as_latex <- function(x) {
     asplit(MARGIN = 1) |> 
     map_chr(\(s) format_colummn_spanners(s, add_indent_col = is_grouped && theme$row_group_indent)) |> 
     str_flatten(collapse = "\n")
+  
+  if (spanners == "") spanners <- NULL
     
   # collapse header
   header <- boxhead |> 
@@ -44,9 +46,10 @@ tblr_as_latex <- function(x) {
   
   x_chr <- x |>
     # interpret any text that was in the dataset before tblr() was called as *not* formatted for LaTeX -> escape
+    # NA is contagious, defuse by turning into character string ("NA")
     mutate(across(
       all_of(text_column_names), 
-      gt::escape_latex
+      \(s) gt::escape_latex(replace_na(s, "NA"))
     )) |> 
     # convert any remaining non-text columns to text at the end
     mutate(across(
