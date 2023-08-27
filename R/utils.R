@@ -46,7 +46,7 @@ format_group_heads <- function(
   prefix <- str_flatten(rep("&", times = span_start - 1),
                         collapse = " ")
   prefix <- if (is_empty(prefix)) NULL else str_c(prefix, " ")
-  suffix <- if (cmidrule) stick("\\cmidrule[lr]{<span_start>-<span_end>}") else NULL
+  suffix <- if (cmidrule) stick("\\cmidrule{<span_start>-<span_end>}") else NULL
   
   stick("<prefix>\\SetCell[c=<n_spanned_columns>]{<colspec>} <fontstyle>{<s>}<line_break>
         <suffix>", 
@@ -77,7 +77,14 @@ format_colummn_spanners <- function(spanner, add_indent_col = FALSE) {
   )
   
   # format
-  cmidrule_row <- stick("\\cmidrule[lr]{<span_range>}") |> 
+  trim <- str_c(
+    if_else(span_start == lag(span_end) + 1, "l", "", missing = ""),
+    if_else(span_end + 1 == lead(span_start), "r", "", missing = "")
+  )
+  
+  cmidrule_row <- stick("\\cmidrule[<trim>]{<span_range>}") |> 
+    # remove empty options
+    str_remove("\\[\\]") |> 
     str_flatten(collapse = " ")
   
   spanner_row <- if_else(
