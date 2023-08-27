@@ -7,6 +7,7 @@ tblr_as_latex <- function(x) {
   boxhead = attr(x, "boxhead")
   interface = attr(x, "interface")
   options = attr(x, "options")
+  spanners = attr(x, "spanners")
   theme = attr(x, "theme")
   
   # retrieve group var (df ungrouped by `tblr`)
@@ -16,6 +17,15 @@ tblr_as_latex <- function(x) {
   if (is_empty(group_var)) group_var <- NULL
   is_grouped <- !is_null(group_var)
   
+  # collapse spanners
+  default_vars <- boxhead$variable[boxhead$type == "default"]
+  
+  spanners <- spanners |> 
+    select(all_of(default_vars)) |> 
+    asplit(MARGIN = 1) |> 
+    map_chr(\(s) format_colummn_spanners(s, add_indent_col = is_grouped && theme$row_group_indent)) |> 
+    str_flatten(collapse = "\n")
+    
   # collapse header
   header <- boxhead |> 
     filter(type == "default") |> 
@@ -116,6 +126,7 @@ tblr_as_latex <- function(x) {
     <interface>
     }
     <toprule>
+    <spanners>
     <header>
     <midrule>
     <body>
@@ -134,6 +145,7 @@ tblr_as_latex <- function(x) {
     <interface>
     }
     <toprule>
+    <spanners>
     <header>
     <midrule>
     <body>

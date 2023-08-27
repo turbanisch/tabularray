@@ -46,13 +46,52 @@ format_group_heads <- function(
   prefix <- str_flatten(rep("&", times = span_start - 1),
                         collapse = " ")
   prefix <- if (is_empty(prefix)) NULL else str_c(prefix, " ")
-  suffix <- if (cmidrule) stick("\\cmidrule{<span_start>-<span_end>}") else NULL
+  suffix <- if (cmidrule) stick("\\cmidrule[lr]{<span_start>-<span_end>}") else NULL
   
   stick("<prefix>\\SetCell[c=<n_spanned_columns>]{<colspec>} <fontstyle>{<s>}<line_break>
         <suffix>", 
         .null = NULL) |> 
     # remove trailing line break if suffix is empty
     str_remove("\\n$")
+}
+
+format_colummn_spanners <- function(spanner, add_indent_col = FALSE) {
+  
+  # calculate number of spanned columns
+  occurences <- table(spanner)
+  n_span <- as.vector(occurences[spanner])
+  
+  # convert spanned columns to NA (should be empty cells in LaTeX)
+  first <- match(unique(spanner), spanner, incomparables = NA)
+  first <- first[!is.na(first)]
+  not_first <- setdiff(seq_along(spanner), first)
+  spanner[not_first] <- NA
+  
+  # calculate span range (from - to) for cmidrules
+  span_start <- first + add_indent_col
+  span_end <- first + n_span[first] - 1 + add_indent_col
+  span_range <- if_else(
+    span_start == span_end,
+    as.character(span_start),
+    str_c(span_start, "-", span_end)
+  )
+  
+  # format
+  cmidrule_row <- stick("\\cmidrule[lr]{<span_range>}") |> 
+    str_flatten(collapse = " ")
+  
+  spanner_row <- if_else(
+    is.na(spanner),
+    "",
+    stick("\\SetCell[c=<n_span>]{c} <spanner>")
+  ) |> 
+    str_flatten(collapse = " & ") |> 
+    str_trim() |> 
+    append_line_break()
+  
+  if (add_indent_col) spanner_row <- str_c("& ", spanner_row)
+  
+  str_c(spanner_row, cmidrule_row, sep = "\n")
 }
 
 stick <- function(..., .open = "<", .close = ">", .envir = parent.frame()) {

@@ -18,6 +18,12 @@ tblr <- function(df,
   interface <- list()
   options <- list()
   
+  # initialize spanners (as empty tibble, same orientation as original df)
+  spanners <- df |> 
+    ungroup() |> 
+    filter(FALSE) |> 
+    mutate(across(everything(), as.character))
+  
   # set default theme options
   theme <- list(
     table_indent = TRUE,
@@ -62,6 +68,7 @@ tblr <- function(df,
     boxhead = boxhead,
     interface = interface,
     options = options,
+    spanners = spanners,
     theme = theme
   )
 }
