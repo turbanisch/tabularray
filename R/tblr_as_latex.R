@@ -9,6 +9,13 @@ tblr_as_latex <- function(x) {
   options = attr(x, "options")
   theme = attr(x, "theme")
   
+  # retrieve group var (df ungrouped by `tblr`)
+  group_var <- boxhead |> 
+    filter(type == "group") |> 
+    pull(variable)
+  if (is_empty(group_var)) group_var <- NULL
+  is_grouped <- !is_null(group_var)
+  
   # collapse header
   header <- boxhead |> 
     filter(type == "default") |> 
@@ -16,7 +23,7 @@ tblr_as_latex <- function(x) {
     as.list() |> 
     collapse_rows()
   
-  if (is.grouped_df(x) && theme$row_group_indent) header <- str_c("& ", header)
+  if (is_grouped && theme$row_group_indent) header <- str_c("& ", header)
   
   # collapse body
   text_column_names <- boxhead |> 
@@ -37,12 +44,12 @@ tblr_as_latex <- function(x) {
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
     ))
   
-  if (!is_grouped_df(x)) {
+  if (!is_grouped) {
     body <- x_chr |>
       collapse_row_block()
   } else {
-    # use grouping structure to nest, then ungroup to make group column editable
-    nested <- nest(x_chr) |> ungroup()
+    # use grouping structure to nest
+    nested <- x_chr |> nest(.by = all_of(group_var))
     separator_column <- c(rep(theme$row_group_sep, times = nrow(nested) - 1), NA)
     nested <- nested |> add_column(separator_column)
     
@@ -71,7 +78,7 @@ tblr_as_latex <- function(x) {
     filter(type == "default") |> 
     pull(alignment) |> 
     str_flatten()
-  if (is_grouped_df(x) && theme$row_group_indent) colspec <- str_c("l", colspec)
+  if (is_grouped && theme$row_group_indent) colspec <- str_c("l", colspec)
   if (!theme$table_indent) colspec <- str_c("@{}", colspec, "@{}")
   interface <- c(list(colspec = colspec), interface)
   

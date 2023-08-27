@@ -34,6 +34,7 @@ tblr <- function(df,
   stopifnot(length(group_vars(df)) <= 1L)
   is_group_var <- colnames(df) %in% group_vars(df)
   col_type <- if_else(is_group_var, "group", "default")
+  df <- ungroup(df)
   
   # guess alignment based on column type
   alignment <- if_else(map_lgl(df, is.numeric), "r", "l")
