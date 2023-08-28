@@ -1,6 +1,7 @@
 # files for drafting
 explore*
 paper.qmd
+todo.md
 
 # derived files
 *.tex
