@@ -16,6 +16,10 @@ append_line_break <- function(s) {
   str_c(s, line_break)
 }
 
+remove_empty_lines <- function(s) {
+  str_replace_all(s, "\\n\\n", "\\\n")
+}
+
 # paste character vectors stored in a list (e.g., a dataframe), output is character vector
 collapse_rows <- function(l) {
   do.call(\(...) str_c(..., sep = " & "), l) |> 
