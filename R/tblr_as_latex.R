@@ -123,8 +123,6 @@ tblr_as_latex <- function(x) {
   if (type == "simple") {
     template <- "
     \\begin{center}
-    \\addtolength{\\leftskip}{-2cm}
-    \\addtolength{\\rightskip}{-2cm}
     \\begin{<env>}{
     <interface>
     }
@@ -140,8 +138,6 @@ tblr_as_latex <- function(x) {
   } else {
     template <- "
     \\begin{center}
-    \\addtolength{\\leftskip}{-2cm}
-    \\addtolength{\\rightskip}{-2cm}
     \\begin{<env>}[
     <options>
     ]{
