@@ -39,7 +39,7 @@ tblr_as_latex <- function(x) {
   
   # collapse body
   text_column_names <- boxhead |> 
-    filter(is_text, type == "default") |> 
+    filter(is_text, type %in% c("default", "group")) |> 
     pull(variable)
   
   n_default_columns <- sum(boxhead$type == "default")
