@@ -1,12 +1,3 @@
-# files for drafting
-explore*
-paper.qmd
-todo.md
-
-# derived files
-*.tex
-*.pdf
-
 # History files
 .Rhistory
 .Rapp.history
@@ -59,3 +50,4 @@ rsconnect/
 
 # MacOS system files
 .DS_Store
+.Rproj.user

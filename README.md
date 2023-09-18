@@ -1,16 +1,115 @@
-## Why evaluate twice?
 
-One idea is to prepare the dataframe including subsetting of columns, transformation of columns (e.g., rounding) before passing it on to the table function. That way we would only have to handle a single "flat" dataframe, rather than one with additional attributes. However, there are things that cannot be reflected in a dataframe, such as captions, footnotes, spanner column labels, grouping columns etc. So it does make sense to store both the original dataset and additional markup in a list or in a dataframe augmented by attributes.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-In the current implementation, the dataframe we would like to format as a table is evaluated twice: `tblr()` adds attributes and sets the dataframe's class to `tblr`. We can then modify the dataframe as usual, e.g. add formatting with `gt::vec_fmt_*()` functions. Finally, we generate LaTeX code using `tblr_to_latex()`. You don't normally need to call this function yourself as it is invoked automatically as a `print()` method and when knitting a document.
+# tabularray
 
-Wouldn't it be sufficient to just evaluate the dataframe once, at the very end? No, because there are certain properties we need to derive from the original dataframe, before any modifications. One example is the column alignment. For example, numeric content should be right-aligned in the table. However, functions like `gt::vec_fmt_number()` convert numeric columns to columns of type character and there is no (simple) way to retrieve the original column specification.
+<!-- badges: start -->
 
-The properties we need to derive from the original dataframe mostly pertain to column types. First, as described above, we use the basic distinction "text-like" (character vectors and factors) vs. "numeric" to tentatively set the alignment (`colspec` in LaTeX).
-Second, we use column types from the original dataframe to determine in which columns we need to escape characters that have a special meaning in LaTeX. Assuming that any manual formatting can only turn columns that weren't text-like initially into columns that are, there are three cases when the LaTeX code is generated: 
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/tabularray)](https://CRAN.R-project.org/package=tabularray)
+<!-- badges: end -->
 
- 1. columns that remained non-text-like, e.g., numeric ones,
- 2. columns that were initially text-like,
- 3. columns that have been turned into text-like ones.
+This package lets you typeset R objects such as dataframes in LaTeX
+using [tabularray](https://github.com/lvjr/tabularray).
+[tabularray](https://github.com/lvjr/tabularray) is a LaTeX package
+developed by Jianrui Lyu that provides a modern and unified alternative
+to the established space of table-generating packages in LaTeX. This
+implementation in R is inspired by the R package
+[gt](https://github.com/rstudio/gt). That means we construct a table
+iteratively, adding formatting by chaining functions together. Unlike
+[gt](https://github.com/rstudio/gt), however, this package focuses on
+LaTeX output. It intends to maximize access the functionality of the
+(LaTeX) [tabularray](https://github.com/lvjr/tabularray) package while
+offering convenience functions for the most common formatting tasks.
 
-Each of the three cases receives a different treatment. We rely on `format(..., trim = TRUE)` to format columns that have remained non-text-like. We then escape special LaTeX characters in columns that were originally text-like. Any additional columns that are text-like *at the end* are assumed to have been produced by manually applying formatting functions that take care of escaping special characters. For example, when you call `gt::vec_fmt_number()` in a knitr environment, it automatically escapes special LaTeX characters. You can force this behavior using the `output = "latex"` argument.
+## Installation
+
+You can install the development version of tabularray from
+[GitHub](https://github.com) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("turbanisch/tabularray")
+```
+
+## Examples
+
+In the example below, we format the same dataset twice to demonstrate
+how tabularray works out of the box and with more fine-tuning applied.
+
+``` r
+library(dplyr)
+library(tabularray)
+
+df <- starwars |> 
+  filter(homeworld == "Tatooine") |>
+  select(name, height, mass, sex, birth_year) |> 
+  arrange(desc(birth_year))
+
+df[1, 1] <- "C$PO"
+```
+
+### Simple table
+
+``` r
+tblr(df)
+```
+
+![](inst/img/simple-table.png)
+
+### Table with markup
+
+``` r
+df |> 
+  mutate(sex = stringr::str_to_title(sex)) |> 
+  group_by(sex) |>
+  tblr(type = "float", caption = "Starwars Creatures from Tatooine") |> 
+  set_source_notes(
+    Note = "Entry C3PO altered to test characters that have a special meaning in LaTeX.",
+    Source = "R package \\texttt{dplyr}"
+  ) |> 
+  set_alignment(height:birth_year ~ "X[r]") |> 
+  set_column_labels(
+    name = "",
+    height = "Height",
+    mass = "Mass",
+    birth_year = "Birth Year"
+  ) |> 
+  set_theme(row_group_style = "panel") |> 
+  set_interface(width = "0.7\\linewidth") |> 
+  set_column_spanner(
+    c(height, mass) ~ "Group 1",
+    birth_year ~ "Group 2"
+  ) |> 
+  set_column_spanner(!name ~ "All my vars")
+```
+
+![](inst/img/marked-up-table.png)
+
+## Usage with Quarto and R Markdown
+
+The tabularray package produces LaTeX code that you can copy and paste
+into your favorite LaTeX editor. However, it is designed to shine in
+combination with literate programming. Integration is seamless: just
+make sure to load the necessary LaTeX packages in your document.
+
+In a Quarto document’s YAML metadata, please include
+
+``` yaml
+format:
+  pdf:
+    include-in-header: tabularray-packages.sty
+```
+
+The `tabularray_packages.sty` file would then contain the dependencies
+listed below:
+
+``` latex
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+```
+
+You do not need to modify any chunk options. knitr will automatically
+embed the LaTeX markup verbatim.
