@@ -57,7 +57,9 @@ df[1, 1] <- "C$PO"
 tblr(df)
 ```
 
-![](inst/img/simple-table.png)
+<p align="center">
+<img src="inst/img/simple-table.png" width="75%">
+</p>
 
 ### Table with markup
 
@@ -86,7 +88,9 @@ df |>
   set_column_spanner(!name ~ "All my vars")
 ```
 
-![](inst/img/marked-up-table.png)
+<p align="center">
+<img src="inst/img/marked-up-table.png" width="75%">
+</p>
 
 ## Usage with Quarto and R Markdown
 
