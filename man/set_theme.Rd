@@ -8,9 +8,10 @@ set_theme(
   x,
   table_indent = NULL,
   table_booktabs = NULL,
-  row_group_sep = NULL,
   row_group_style = NULL,
+  row_group_sep = NULL,
   row_group_indent = NULL,
+  row_group_head = NULL,
   row_group_head_alignment = NULL,
   row_group_head_fontstyle = NULL,
   row_group_head_cmidrule = NULL,
@@ -24,13 +25,15 @@ set_theme(
 
 \item{table_booktabs}{Format the table using \code{booktabs}? \code{TRUE} by default. \code{booktabs} is a LaTeX package that modifies the width (thickness) of rules and spacing around them.}
 
+\item{row_group_style}{A preset to style row groups, either \code{"left"}, \code{"center"}, \code{"separators"}, or \code{"panel"}. These presets affect other \verb{row_group_*} options but can be overwritten.}
+
 \item{row_group_sep}{How to separate row groups? Default is \verb{\\\\addlinespace}. Another common choice is \verb{\\\\midrule}.  Specify \code{character(0)} to remove separators.}
 
-\item{row_group_style}{A preset to style row groups, either \code{"left"}, \code{"center"}, or \code{"panel"}. These presets affect the options \code{row_group_indent}, \code{row_group_head_alignment}, \code{row_group_head_cmidrule}, and \code{row_group_head_skip_stub} but can be overwritten.}
+\item{row_group_indent}{Indent rows under a group heading? \code{TRUE} by default. Indentation is achieved by adding an invisible column that is left blank in grouped rows.}
 
-\item{row_group_indent}{Indent rows under a group heading? \code{TRUE} by default. This value is affected by \code{row_group_style} presets but can be overwritten. Indentation is achieved by adding an invisible column that is left blank in grouped rows.}
+\item{row_group_head}{Should there be headings for row groups? \code{TRUE} by default.}
 
-\item{row_group_head_alignment}{The value for the alignment (column specification) of row group heads, \code{"l"} by default. This value is affected by \code{row_group_style} presets but can be overwritten.}
+\item{row_group_head_alignment}{The value for the alignment (column specification) of row group heads, \code{"l"} by default.}
 
 \item{row_group_head_fontstyle}{The font style to use for row group heads, \code{"\\\\textit"} (italic) by default. Other options include:
 \itemize{
@@ -41,9 +44,9 @@ set_theme(
 
 Note that only a single command can be used.}
 
-\item{row_group_head_cmidrule}{Add a rule below the row group head? \code{FALSE} by default. This value is affected by \code{row_group_style} presets but can be overwritten.}
+\item{row_group_head_cmidrule}{Add a rule below the row group head? \code{FALSE} by default.}
 
-\item{row_group_head_skip_stub}{Should the stub (i.e., the first column) be skipped when aligning row group heads and drawing rules underneath them? \code{FALSE} by default. This value is affected by \code{row_group_style} presets but can be overwritten.}
+\item{row_group_head_skip_stub}{Should the stub (i.e., the first column) be skipped when aligning row group heads and drawing rules underneath them? \code{FALSE} by default.}
 }
 \value{
 A \code{tblr} table object.
@@ -53,6 +56,7 @@ This function allows you to fine-tune the way your \code{tblr} table object is r
 }
 \examples{
 library(dplyr)
+
 df <- tibble(
   continent = c("Europe", "Asia", "Asia", "Europe", "Asia"),
   country = c("Germany","China", "Afghanistan","France","Taiwan"),

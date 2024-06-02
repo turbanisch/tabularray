@@ -108,6 +108,10 @@ tblr_as_latex <- function(x) {
       ))) |>
       mutate(data = map_chr(data, \(x) collapse_row_block(x, add_indent_col = theme$row_group_indent)))
 
+    if (!theme$row_group_head) {
+      nested_chr <- nested_chr |> select(!all_of(group_var))
+    }
+
     body <- nested_chr |>
       as.list() |>
       list_transpose() |>

@@ -7,24 +7,26 @@
 #' @param x A `tblr` table object.
 #' @param table_indent Slightly indent the table contents? `TRUE` by default. `FALSE` removes the indentation by adding "@\{\}" to both sides of the column specification in LaTeX.
 #' @param table_booktabs Format the table using `booktabs`? `TRUE` by default. `booktabs` is a LaTeX package that modifies the width (thickness) of rules and spacing around them.
+#' @param row_group_style A preset to style row groups, either `"left"`, `"center"`, `"separators"`, or `"panel"`. These presets affect other `row_group_*` options but can be overwritten.
 #' @param row_group_sep How to separate row groups? Default is `\\addlinespace`. Another common choice is `\\midrule`.  Specify `character(0)` to remove separators.
-#' @param row_group_style A preset to style row groups, either `"left"`, `"center"`, or `"panel"`. These presets affect the options `row_group_indent`, `row_group_head_alignment`, `row_group_head_cmidrule`, and `row_group_head_skip_stub` but can be overwritten.
-#' @param row_group_indent Indent rows under a group heading? `TRUE` by default. This value is affected by `row_group_style` presets but can be overwritten. Indentation is achieved by adding an invisible column that is left blank in grouped rows.
-#' @param row_group_head_alignment The value for the alignment (column specification) of row group heads, `"l"` by default. This value is affected by `row_group_style` presets but can be overwritten.
+#' @param row_group_indent Indent rows under a group heading? `TRUE` by default. Indentation is achieved by adding an invisible column that is left blank in grouped rows.
+#' @param row_group_head Should there be headings for row groups? `TRUE` by default.
+#' @param row_group_head_alignment The value for the alignment (column specification) of row group heads, `"l"` by default.
 #' @param row_group_head_fontstyle The font style to use for row group heads, `"\\textit"` (italic) by default. Other options include:
 #' - `"\\textbf"`: boldface
 #' - `"\\textup"`: standard font style
 #' - `"\\textsc"`: small caps
 #'
 #' Note that only a single command can be used.
-#' @param row_group_head_cmidrule Add a rule below the row group head? `FALSE` by default. This value is affected by `row_group_style` presets but can be overwritten.
-#' @param row_group_head_skip_stub Should the stub (i.e., the first column) be skipped when aligning row group heads and drawing rules underneath them? `FALSE` by default. This value is affected by `row_group_style` presets but can be overwritten.
+#' @param row_group_head_cmidrule Add a rule below the row group head? `FALSE` by default.
+#' @param row_group_head_skip_stub Should the stub (i.e., the first column) be skipped when aligning row group heads and drawing rules underneath them? `FALSE` by default.
 #'
 #' @return A `tblr` table object.
 #' @export
 #'
 #' @examples
 #' library(dplyr)
+#'
 #' df <- tibble(
 #'   continent = c("Europe", "Asia", "Asia", "Europe", "Asia"),
 #'   country = c("Germany","China", "Afghanistan","France","Taiwan"),
@@ -44,9 +46,10 @@ set_theme <- function(
   x,
   table_indent = NULL,
   table_booktabs = NULL,
-  row_group_sep = NULL,
   row_group_style = NULL,
+  row_group_sep = NULL,
   row_group_indent = NULL,
+  row_group_head = NULL,
   row_group_head_alignment = NULL,
   row_group_head_fontstyle = NULL,
   row_group_head_cmidrule = NULL,
@@ -84,6 +87,8 @@ expand_meta_theme_options <- function(arg_vals) {
   if (arg_vals$row_group_style == "left") {
     # left
     replacements <- list(
+      row_group_head = TRUE,
+      row_group_sep = "\\addlinespace",
       row_group_indent = TRUE,
       row_group_head_alignment = "l",
       row_group_head_cmidrule = FALSE,
@@ -92,14 +97,28 @@ expand_meta_theme_options <- function(arg_vals) {
   } else if (arg_vals$row_group_style == "center") {
     # center
     replacements <- list(
+      row_group_head = TRUE,
+      row_group_sep = "\\addlinespace",
       row_group_indent = FALSE,
       row_group_head_alignment = "c",
+      row_group_head_cmidrule = FALSE,
+      row_group_head_skip_stub = FALSE
+    )
+  } else if (arg_vals$row_group_style == "separators") {
+    # center
+    replacements <- list(
+      row_group_head = FALSE,
+      row_group_sep = "\\midrule",
+      row_group_indent = FALSE,
+      row_group_head_alignment = "l", # included for completeness, does not show
       row_group_head_cmidrule = FALSE,
       row_group_head_skip_stub = FALSE
     )
   } else {
     # panel
     replacements <- list(
+      row_group_head = TRUE,
+      row_group_sep = "\\addlinespace",
       row_group_indent = FALSE,
       row_group_head_alignment = "c",
       row_group_head_cmidrule = TRUE,
