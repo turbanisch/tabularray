@@ -130,14 +130,3 @@ format_key_value_pairs <- function(named_list) {
     named_vec
   ) |> str_flatten(collapse = ",\n")
 }
-
-# find maximum number of characters from both columns and colnames to specify padding
-max_nchar_per_col <- function(column_labels, df) {
-
-  label_lengths <- str_length(column_labels)
-  body_lengths <- as.list(df) |>
-    map_int(\(x) max(str_length(x)))
-
-  pmax(label_lengths, body_lengths) |>
-    set_names(names(df))
-}
