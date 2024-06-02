@@ -138,5 +138,6 @@ max_nchar_per_col <- function(column_labels, df) {
   body_lengths <- as.list(df) |>
     map_int(\(x) max(str_length(x)))
 
-  pmax(label_lengths, body_lengths)
+  pmax(label_lengths, body_lengths) |>
+    set_names(names(df))
 }

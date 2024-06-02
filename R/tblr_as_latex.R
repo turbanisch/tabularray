@@ -58,7 +58,8 @@ tblr_as_latex <- function(x) {
 
   if (spanners == "") spanners <- NULL
 
-  # extract column labels
+  # extract column labels (needed here to compute max_nchar for padding)
+  # collapse header below body
   labels <- boxhead |>
     filter(type == "default") |>
     pull(label)
@@ -84,10 +85,10 @@ tblr_as_latex <- function(x) {
     ))
 
   # add padding
-  max_nchar <- max_nchar_per_col(labels, x_chr)
-
-  for (i in 1:ncol(x_chr)) {
-    x_chr[[i]] <- str_pad(x_chr[[i]], width = max_nchar[i], side = "right")
+  non_group_vars <- setdiff(colnames(x_chr), group_var)
+  max_nchar <- max_nchar_per_col(labels, x_chr[non_group_vars])
+  for (col in non_group_vars) {
+    x_chr[[col]] <- str_pad(x_chr[[col]], width = max_nchar[col], side = "right")
   }
 
   if (!is_grouped) {
