@@ -165,5 +165,7 @@ align_ampersand <- function(s) {
   combined <- c(not_align_list, aligned_list)
   combined[order(as.integer(names(combined)))] |>
     list_simplify() |>
-    unname()
+    unname() |>
+    str_flatten(collapse = "\n")
+}
 }
