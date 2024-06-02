@@ -130,3 +130,40 @@ format_key_value_pairs <- function(named_list) {
     named_vec
   ) |> str_flatten(collapse = ",\n")
 }
+
+# post-process LaTeX markup to align at "&" character
+# expect entire LaTeX markup as single string `s`
+align_ampersand <- function(s) {
+
+  ampersand <- regex("(?<!\\\\)&")
+
+  # split each line at ampersand
+  line_list <- s |>
+    str_remove_all("\\\\\\\\") |>
+    str_split_1(pattern = "\\n") |>
+    str_split(pattern = ampersand) |>
+    map(str_trim)
+
+  # track lines by adding row number
+  names(line_list) <- seq_along(line_list)
+
+  # modify only lines that contain the maximum number of ampersands (i.e., regular cells)
+  align_list <- line_list |>
+    keep(\(x) length(x) == max(lengths(line_list)))
+
+  not_align_list <- line_list |>
+    keep(\(x) length(x) < max(lengths(line_list)))
+
+  # transpose to add padding across columns instead of rows
+  aligned_list <- align_list |>
+    list_transpose() |>
+    map(\(x) str_pad(x, width = max(str_length(x)), side = "right")) |>
+    collapse_rows() |>
+    set_names(names(align_list))
+
+  # combine and order by original row number
+  combined <- c(not_align_list, aligned_list)
+  combined[order(as.integer(names(combined)))] |>
+    list_simplify() |>
+    unname()
+}
