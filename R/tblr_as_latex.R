@@ -191,7 +191,8 @@ tblr_as_latex <- function(x) {
   # merge variables into template (missing components result in empty lines)
   out <- stick(template, .null = NULL) |>
     remove_empty_lines() |>
-    align_ampersand()
+    align_ampersand() |>
+    indent_lines()
 
   # assign class "knit_asis"
   knitr::asis_output(out)

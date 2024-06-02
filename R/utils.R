@@ -168,4 +168,18 @@ align_ampersand <- function(s) {
     unname() |>
     str_flatten(collapse = "\n")
 }
+
+indent_lines <- function(s) {
+
+  line_vector <- str_split_1(s, pattern = "\\n")
+
+  begin <- str_detect(line_vector, "\\\\begin") |> cumsum()
+  end <- str_detect(line_vector, "\\\\end") |> cumsum()
+
+  indent <- "    "
+  n_indents <- lag(begin, default = 0) - end
+  line_indents <- map_chr(n_indents, \(x) str_flatten(rep(indent, times = x)))
+
+  str_c(line_indents, line_vector) |>
+    str_flatten(collapse = "\n")
 }
