@@ -58,14 +58,10 @@ tblr_as_latex <- function(x) {
 
   if (spanners == "") spanners <- NULL
 
-  # collapse header
-  header <- boxhead |>
+  # extract column labels
+  labels <- boxhead |>
     filter(type == "default") |>
-    pull(label) |>
-    as.list() |>
-    collapse_rows()
-
-  if (is_grouped && theme$row_group_indent) header <- str_c("& ", header)
+    pull(label)
 
   # collapse body
   text_column_names <- boxhead |>
@@ -86,6 +82,13 @@ tblr_as_latex <- function(x) {
       .cols = where(\(x) !is.character(x)),
       .fns = \(x) format(x, digits = 2L, trim = TRUE)
     ))
+
+  # add padding
+  max_nchar <- max_nchar_per_col(labels, x_chr)
+
+  for (i in 1:ncol(x_chr)) {
+    x_chr[[i]] <- str_pad(x_chr[[i]], width = max_nchar[i], side = "right")
+  }
 
   if (!is_grouped) {
     body <- x_chr |>
@@ -118,6 +121,14 @@ tblr_as_latex <- function(x) {
       list_c() |>
       str_flatten(collapse = "\n", na.rm = TRUE)
   }
+
+  # collapse header
+  header <- labels |>
+    str_pad(width = max_nchar, side = "right") |>
+    as.list() |>
+    collapse_rows()
+
+  if (is_grouped && theme$row_group_indent) header <- str_c("& ", header)
 
   # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
   stopifnot(!"colspec" %in% names(interface))
