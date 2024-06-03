@@ -147,12 +147,21 @@ align_ampersand <- function(s) {
   # track lines by adding row number
   names(line_list) <- seq_along(line_list)
 
-  # modify only lines that contain the maximum number of ampersands (i.e., regular cells)
+  # modify only lines that contain ampersands (i.e., regular cells)
+  # add missing trailing ampersands
   align_list <- line_list |>
     keep(\(x) length(x) == max(lengths(line_list)))
 
+  complete_and_align_list <- line_list |>
+    keep(\(x) length(x) > 1 & length(x) < max(lengths(line_list)))
+
+  n_missing_ampersands <- max(lengths(line_list)) - lengths(complete_and_align_list)
+  missing_ampersands <- map(n_missing_ampersands, \(x) rep("", times = x))
+
+  complete_and_align_list <- map2(complete_and_align_list, missing_ampersands, c)
+
   not_align_list <- line_list |>
-    keep(\(x) length(x) < max(lengths(line_list)))
+    keep(\(x) length(x) == 1)
 
   # transpose to add padding across columns instead of rows
   aligned_list <- align_list |>
