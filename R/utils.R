@@ -158,7 +158,10 @@ align_ampersand <- function(s) {
   n_missing_ampersands <- max(lengths(line_list)) - lengths(complete_and_align_list)
   missing_ampersands <- map(n_missing_ampersands, \(x) rep("", times = x))
 
-  complete_and_align_list <- map2(complete_and_align_list, missing_ampersands, c)
+  align_list <- c(
+    align_list,
+    map2(complete_and_align_list, missing_ampersands, c)
+  )
 
   not_align_list <- line_list |>
     keep(\(x) length(x) == 1)
