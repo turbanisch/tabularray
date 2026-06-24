@@ -9,7 +9,7 @@
 library(dplyr)
 devtools::load_all(".", quiet = TRUE)
 
-render_png <- function(latex, outfile, dpi = 300) {
+render_png <- function(latex, outfile, dpi = 600) {
   # drop the outer \begin{center} ... \end{center} so `standalone` (varwidth)
   # crops tightly to the table instead of a full \linewidth-wide centred box
   lines <- strsplit(latex, "\n", fixed = TRUE)[[1]]
@@ -40,9 +40,10 @@ render_png <- function(latex, outfile, dpi = 300) {
   pdf <- file.path(wd, "fig.pdf")
   if (!file.exists(pdf)) stop("pdflatex failed for ", outfile)
 
-  # PDF -> PNG (white background; already cropped by standalone)
-  system2("pdftoppm", c("-png", "-r", dpi, "-singlefile", pdf,
-                        tools::file_path_sans_ext(outfile)))
+  # PDF -> PNG (white background; already cropped by standalone). pdftocairo
+  # anti-aliases text more smoothly than pdftoppm.
+  system2("pdftocairo", c("-png", "-r", dpi, "-singlefile", pdf,
+                          tools::file_path_sans_ext(outfile)))
   invisible(outfile)
 }
 
