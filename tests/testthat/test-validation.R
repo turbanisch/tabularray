@@ -11,6 +11,13 @@ test_that("non-simple types require a caption", {
   expect_no_error(tblr(countries(), type = "float", caption = "C"))
 })
 
+test_that("simple tables reject a caption", {
+  expect_error(
+    tblr(countries(), caption = "C"),
+    "Simple tables do not have a caption"
+  )
+})
+
 test_that("at most one grouping variable is allowed", {
   expect_error(
     countries2() |> dplyr::group_by(continent, country) |> tblr(),

@@ -30,6 +30,13 @@ tblr <- function(df,
       i = 'Supply `caption`, or use `type = "simple"` for an untitled table.'
     ))
   }
+  if (type == "simple" && !is_null(caption)) {
+    rlang::abort(c(
+      "Simple tables do not have a caption.",
+      x = 'A `caption` was supplied with `type = "simple"`.',
+      i = 'Use `type = "float"` (or "break") for a captioned table.'
+    ))
+  }
 
   # convert factor to character (to harmonize "text-like" column types)
   df <- df |> mutate(across(where(is.factor), as.character))
