@@ -68,20 +68,17 @@ tblr_as_latex <- function(x) {
   if (is_grouped && theme$row_group_indent) header <- str_c("& ", header)
 
   # collapse body
-  text_column_names <- boxhead |>
-    filter(is_text, type %in% c("default", "group")) |>
-    pull(variable)
-
   n_default_columns <- sum(boxhead$type == "default")
 
   x_chr <- x |>
-    # interpret any text that was in the dataset before tblr() was called as *not* formatted for LaTeX -> escape
-    # NA is contagious, defuse by turning into character string ("NA")
+    # escape whatever is character *now* (re-derived from the column's actual
+    # type rather than a snapshot taken at tblr() time). NA is contagious, so
+    # defuse it by turning it into the literal string "NA".
     mutate(across(
-      all_of(text_column_names),
+      where(is.character),
       \(s) gt::escape_latex(replace_na(s, "NA"))
     )) |>
-    # convert any remaining non-text columns to text at the end
+    # convert any remaining non-character columns to text at the end
     mutate(across(
       .cols = where(\(x) !is.character(x)),
       .fns = format_column_default

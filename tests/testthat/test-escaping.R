@@ -25,6 +25,16 @@ test_that("NA in a text column renders as literal NA", {
   expect_match(out, "NA")
 })
 
+test_that("escaping is re-derived at render, not snapshotted at tblr()", {
+  # a column that becomes character AFTER tblr() must still be escaped (the old
+  # is_text snapshot left such columns unescaped -> broken LaTeX)
+  x <- tblr(tibble::tibble(v = c(100, 200)))
+  x[["v"]] <- c("a$b", "c%d")
+  out <- as_latex(x)
+  expect_match(out, "a\\\\\\$b")
+  expect_match(out, "c\\\\%d")
+})
+
 test_that("raw LaTeX in labels/spanners is NOT escaped", {
   out <- as_latex(
     tblr(countries()) |>
