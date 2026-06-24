@@ -6,6 +6,8 @@ Authors@R:
            comment = c(ORCID = "0000-0003-2279-1686"))
 Description: Typeset R objects such as dataframes in LaTeX using 'tabularray'. 'tabularray' is a LaTeX package developed by Jianrui Lyu that provides a modern and unified alternative to the established space of table-generating packages in LaTeX. This implementation in R is inspired by the R package 'gt'. That means we construct a table iteratively, adding formatting by chaining functions together. Unlike 'gt', however, this package focuses on LaTeX output. It intends to maximize access the functionality of the (LaTeX) 'tabularray' package while offering convenience functions for the most common formatting tasks.
 License: MIT + file LICENSE
+URL: https://github.com/turbanisch/tabularray, https://turbanisch.github.io/tabularray/
+BugReports: https://github.com/turbanisch/tabularray/issues
 Depends:
     R (>= 4.1.0)
 Suggests:
