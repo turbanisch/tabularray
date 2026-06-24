@@ -49,3 +49,19 @@ test_that("unknown column names in set_*() warn instead of silently no-op", {
     "unknown column"
   )
 })
+
+test_that("unnamed (positional) arguments fail with a clear message", {
+  expect_error(
+    tblr(countries()) |> set_column_labels(c("A", "B", "C")),
+    "must be named"
+  )
+  expect_error(
+    tblr(countries()) |> set_colspec("r"),
+    "must be named"
+  )
+  # a partially-named call still catches the unnamed one
+  expect_error(
+    tblr(countries()) |> set_column_labels(value = "X", "Y"),
+    "must be named"
+  )
+})

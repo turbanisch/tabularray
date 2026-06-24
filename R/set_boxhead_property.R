@@ -18,8 +18,18 @@ set_boxhead_property <- function(x, property, ...) {
     } else {
       # otherwise interpret as named list element
       # note that names are a property of the entire list, not of an individual element
-      target_col_names <- names(kwargs)[i]
+      target_col_names <- if (is.null(names(kwargs))) NA_character_ else names(kwargs)[i]
       replacement <- kwargs[[i]]
+
+      # an unnamed argument can't target a column; fail clearly rather than with
+      # an opaque recycling error further down
+      if (is.na(target_col_names) || target_col_names == "") {
+        rlang::abort(c(
+          "Each argument must be named or a two-sided formula.",
+          x = "Got an unnamed argument.",
+          i = "Use `column = value` to target a column by name, or `selection ~ value` for tidy-select."
+        ))
+      }
 
       # the tidy-select path errors on unknown columns via eval_select(); guard
       # the named-argument path, which would otherwise silently do nothing
