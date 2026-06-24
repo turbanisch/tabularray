@@ -84,7 +84,7 @@ tblr_as_latex <- function(x) {
     # convert any remaining non-text columns to text at the end
     mutate(across(
       .cols = where(\(x) !is.character(x)),
-      .fns = \(x) format(x, digits = 2L, trim = TRUE)
+      .fns = format_column_default
     ))
 
   if (!is_grouped) {

@@ -11,13 +11,13 @@
                & country     & gdp   & population \\ 
               \midrule
               \SetCell[c=4]{l} \textit{Europe}
-               & Germany     & 0.17  & 11.0       \\ 
-               & France      & 17.00 & 5.0        \\ 
+               & Germany     & 0.17  & 11.00      \\ 
+               & France      & 17.00 & 5.00       \\ 
               \addlinespace
               \SetCell[c=4]{l} \textit{Asia}
-               & China       & 0.23  & 7.3        \\ 
-               & Afghanistan & 11.30 & 123.1      \\ 
-               & Taiwan      & 2.40  & 33.0       \\ 
+               & China       & 0.23  & 7.30       \\ 
+               & Afghanistan & 11.30 & 123.11     \\ 
+               & Taiwan      & 2.40  & 33.00      \\ 
               \bottomrule
           \end{booktabs}
       \end{center}

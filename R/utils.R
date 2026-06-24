@@ -30,6 +30,27 @@ stop_if_not_tblr <- function(x) {
   stopifnot("tblr" %in% class(x))
 }
 
+# Number of decimal places used for non-integer numeric columns by default.
+# Single knob for the package-wide default; per-column currency/percent/
+# significant-digit formatting is the user's job, done upstream (before `tblr()`)
+# with scales/gt/sprintf/round.
+default_digits <- 2L
+
+# Default formatter applied at render to every column that is still non-character.
+# - integer columns and whole-valued doubles (years, counts) -> no decimals
+# - other doubles -> fixed `default_digits` decimal places, no scientific notation
+# - everything else (Date, logical, ...) -> faithful as-displayed string
+# Replaces a bare `format(x, digits = 2L)`, whose `digits` meant *significant
+# figures*, not decimal places (e.g. 3.04 -> "3").
+format_column_default <- function(x) {
+  if (is.numeric(x)) {
+    whole <- all(x == round(x), na.rm = TRUE)
+    formatC(x, format = "f", digits = if (whole) 0L else default_digits)
+  } else {
+    format(x, trim = TRUE)
+  }
+}
+
 # collapse rows and flatten into a single character vector
 collapse_row_block <- function(df, add_indent_col = FALSE) {
   row_vector <- collapse_rows(df)

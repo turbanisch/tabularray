@@ -10,15 +10,15 @@
               \toprule
               name               & height & mass & sex    & birth\_year \\ 
               \midrule
-              C\$PO              & 167    & 75   & none   & 112         \\ 
-              Cliegg Lars        & 183    & NA   & male   & 82          \\ 
-              Shmi Skywalker     & 163    & NA   & female & 72          \\ 
-              Owen Lars          & 178    & 120  & male   & 52          \\ 
-              Beru Whitesun Lars & 165    & 75   & female & 47          \\ 
-              Darth Vader        & 202    & 136  & male   & 42          \\ 
-              Anakin Skywalker   & 188    & 84   & male   & 42          \\ 
-              Biggs Darklighter  & 183    & 84   & male   & 24          \\ 
-              Luke Skywalker     & 172    & 77   & male   & 19          \\ 
+              C\$PO              & 167    & 75   & none   & 112.00      \\ 
+              Cliegg Lars        & 183    & NA   & male   & 82.00       \\ 
+              Shmi Skywalker     & 163    & NA   & female & 72.00       \\ 
+              Owen Lars          & 178    & 120  & male   & 52.00       \\ 
+              Beru Whitesun Lars & 165    & 75   & female & 47.00       \\ 
+              Darth Vader        & 202    & 136  & male   & 41.90       \\ 
+              Anakin Skywalker   & 188    & 84   & male   & 41.90       \\ 
+              Biggs Darklighter  & 183    & 84   & male   & 24.00       \\ 
+              Luke Skywalker     & 172    & 77   & male   & 19.00       \\ 
               R5-D4              & 97     & 32   & none   & NA          \\ 
               \bottomrule
           \end{booktabs}
@@ -47,22 +47,22 @@
               \midrule
                                  & \SetCell[c=3]{c} \textit{None}   &      &                          \\ 
               \cmidrule{2-4}
-              C\$PO              & 167                              & 75   & 112                      \\ 
+              C\$PO              & 167                              & 75   & 112.00                   \\ 
               R5-D4              & 97                               & 32   & NA                       \\ 
               \addlinespace
                                  & \SetCell[c=3]{c} \textit{Male}   &      &                          \\ 
               \cmidrule{2-4}
-              Cliegg Lars        & 183                              & NA   & 82                       \\ 
-              Owen Lars          & 178                              & 120  & 52                       \\ 
-              Darth Vader        & 202                              & 136  & 42                       \\ 
-              Anakin Skywalker   & 188                              & 84   & 42                       \\ 
-              Biggs Darklighter  & 183                              & 84   & 24                       \\ 
-              Luke Skywalker     & 172                              & 77   & 19                       \\ 
+              Cliegg Lars        & 183                              & NA   & 82.00                    \\ 
+              Owen Lars          & 178                              & 120  & 52.00                    \\ 
+              Darth Vader        & 202                              & 136  & 41.90                    \\ 
+              Anakin Skywalker   & 188                              & 84   & 41.90                    \\ 
+              Biggs Darklighter  & 183                              & 84   & 24.00                    \\ 
+              Luke Skywalker     & 172                              & 77   & 19.00                    \\ 
               \addlinespace
                                  & \SetCell[c=3]{c} \textit{Female} &      &                          \\ 
               \cmidrule{2-4}
-              Shmi Skywalker     & 163                              & NA   & 72                       \\ 
-              Beru Whitesun Lars & 165                              & 75   & 47                       \\ 
+              Shmi Skywalker     & 163                              & NA   & 72.00                    \\ 
+              Beru Whitesun Lars & 165                              & 75   & 47.00                    \\ 
               \bottomrule
           \end{talltabs}
       \end{center}
@@ -171,14 +171,14 @@
               \midrule
                           & \SetCell[c=2]{l} \textit{Europe} &            \\ 
               \cmidrule{2-3}
-              Germany     & 0.17                             & 11.0       \\ 
-              France      & 17.00                            & 5.0        \\ 
+              Germany     & 0.17                             & 11.00      \\ 
+              France      & 17.00                            & 5.00       \\ 
               \addlinespace
                           & \SetCell[c=2]{l} \textit{Asia}   &            \\ 
               \cmidrule{2-3}
-              China       & 0.23                             & 7.3        \\ 
-              Afghanistan & 11.30                            & 123.1      \\ 
-              Taiwan      & 2.40                             & 33.0       \\ 
+              China       & 0.23                             & 7.30       \\ 
+              Afghanistan & 11.30                            & 123.11     \\ 
+              Taiwan      & 2.40                             & 33.00      \\ 
               \bottomrule
           \end{booktabs}
       \end{center}
