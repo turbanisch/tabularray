@@ -76,7 +76,7 @@ tblr_as_latex <- function(x) {
     # defuse it by turning it into the literal string "NA".
     mutate(across(
       where(is.character),
-      \(s) gt::escape_latex(replace_na(s, "NA"))
+      \(s) escape_latex(replace_na(s, "NA"))
     )) |>
     # convert any remaining non-character columns to text at the end
     mutate(across(

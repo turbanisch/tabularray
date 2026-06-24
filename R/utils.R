@@ -68,6 +68,35 @@ format_column_default <- function(x) {
   }
 }
 
+# Map of LaTeX special characters to their escaped forms.
+latex_special_chars <- c(
+  "\\" = "\\textbackslash{}",
+  "~"  = "\\textasciitilde{}",
+  "^"  = "\\textasciicircum{}",
+  "&"  = "\\&",
+  "%"  = "\\%",
+  "$"  = "\\$",
+  "#"  = "\\#",
+  "_"  = "\\_",
+  "{"  = "\\{",
+  "}"  = "\\}"
+)
+
+# Escape LaTeX special characters in a character vector. Vendored from
+# gt::escape_latex() (the only thing the package used gt for) to drop a heavy
+# dependency. Each special character is replaced exactly once in a single pass,
+# so introduced escapes are not themselves re-escaped; NA is returned unchanged.
+escape_latex <- function(text) {
+  if (length(text) < 1) return(text)
+  na_text <- is.na(text)
+  if (all(na_text)) return(text)
+
+  m <- gregexpr("[\\\\&%$#_{}~^]", text[!na_text], perl = TRUE)
+  specials <- regmatches(text[!na_text], m)
+  regmatches(text[!na_text], m) <- lapply(specials, function(x) latex_special_chars[x])
+  text
+}
+
 # collapse rows and flatten into a single character vector
 collapse_row_block <- function(df, add_indent_col = FALSE) {
   row_vector <- collapse_rows(df)

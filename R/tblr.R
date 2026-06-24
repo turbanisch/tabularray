@@ -82,7 +82,7 @@ tblr <- function(df,
     variable = colnames(df),
     type = col_type,
     alignment = alignment,
-    label = gt::escape_latex(colnames(df))
+    label = escape_latex(colnames(df))
   )
 
   # save caption in options if provided
