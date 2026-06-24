@@ -123,7 +123,7 @@ appearance with `set_theme()`:
 
 ```{r}
 starwars |>
-  filter(homeworld == "Tatooine") |>
+  filter(homeworld == "Tatooine", !name %in% c("Anakin Skywalker", "Darth Vader")) |>
   select(name, height, mass, sex, birth_year) |>
   mutate(sex = stringr::str_to_title(sex)) |>
   group_by(sex) |>

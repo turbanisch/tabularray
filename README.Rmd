@@ -59,9 +59,9 @@ In the example below, we format the same dataset twice to demonstrate how tabula
 library(dplyr)
 library(tabularray)
 
-df <- starwars |> 
-  filter(homeworld == "Tatooine") |>
-  select(name, height, mass, sex, birth_year) |> 
+df <- starwars |>
+  filter(homeworld == "Tatooine", !name %in% c("Anakin Skywalker", "Darth Vader")) |>
+  select(name, height, mass, sex, birth_year) |>
   arrange(desc(birth_year))
 
 df[1, 1] <- "C$PO"

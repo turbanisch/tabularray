@@ -60,9 +60,9 @@ how tabularray works out of the box and with more fine-tuning applied.
 library(dplyr)
 library(tabularray)
 
-df <- starwars |> 
-  filter(homeworld == "Tatooine") |>
-  select(name, height, mass, sex, birth_year) |> 
+df <- starwars |>
+  filter(homeworld == "Tatooine", !name %in% c("Anakin Skywalker", "Darth Vader")) |>
+  select(name, height, mass, sex, birth_year) |>
   arrange(desc(birth_year))
 
 df[1, 1] <- "C$PO"
