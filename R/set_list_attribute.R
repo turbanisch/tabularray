@@ -107,12 +107,13 @@ set_options <- function(x, ...) {
 #'   value = c(0.17, 0.23, 11.3, 17, 2.4)
 #' )
 #'
-#'x <- tblr(df, type = "float", caption = "A table with notes")
+#' x <- tblr(df, type = "float", caption = "A table with notes")
 #'
-#'x |> set_source_notes(
-#'  Source = "Built-in R dataset",
-#'  Note = "This dataset comes with every R installation and is available without explicitly loading it."
-#')
+#' x |> set_source_notes(
+#'   Source = "Built-in R dataset",
+#'   Note = paste("This dataset comes with every R installation and is",
+#'                "available without explicitly loading it.")
+#' )
 set_source_notes <- function(x, ...) {
   stop_if_not_tblr(x)
   if (!attr(x, "type") %in% c("float", "break")) {

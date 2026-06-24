@@ -11,5 +11,10 @@ Typeset R objects such as dataframes in LaTeX using 'tabularray'. 'tabularray' i
 \author{
 \strong{Maintainer}: Felix Turbanisch \email{felix.turbanisch@uni-goettingen.de} (\href{https://orcid.org/0000-0003-2279-1686}{ORCID})
 
+Authors:
+\itemize{
+  \item Felix Turbanisch \email{felix.turbanisch@uni-goettingen.de} (\href{https://orcid.org/0000-0003-2279-1686}{ORCID})
+}
+
 }
 \keyword{internal}
