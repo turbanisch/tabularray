@@ -27,7 +27,74 @@ collapse_rows <- function(l) {
 }
 
 stop_if_not_tblr <- function(x) {
-  stopifnot("tblr" %in% class(x))
+  if (!inherits(x, "tblr")) {
+    rlang::abort(c(
+      "`x` must be a `tblr` object.",
+      i = "Create one with `tblr()` before adding styling or rendering it."
+    ))
+  }
+}
+
+# Tag rendered markup so knitr emits it verbatim. The `knit_asis` class is only
+# acted on when knitr processes the output, so we keep knitr a soft (Suggests)
+# dependency: generating the LaTeX string itself must work without knitr
+# installed (e.g. copy-pasting into a LaTeX editor).
+as_knit_asis <- function(x) {
+  if (requireNamespace("knitr", quietly = TRUE)) {
+    knitr::asis_output(x)
+  } else {
+    structure(x, class = "knit_asis")
+  }
+}
+
+# Number of decimal places used for non-integer numeric columns by default.
+# Single knob for the package-wide default; per-column currency/percent/
+# significant-digit formatting is the user's job, done upstream (before `tblr()`)
+# with scales/gt/sprintf/round.
+default_digits <- 2L
+
+# Default formatter applied at render to every column that is still non-character.
+# - integer columns and whole-valued doubles (years, counts) -> no decimals
+# - other doubles -> fixed `default_digits` decimal places, no scientific notation
+# - everything else (Date, logical, ...) -> faithful as-displayed string
+# Replaces a bare `format(x, digits = 2L)`, whose `digits` meant *significant
+# figures*, not decimal places (e.g. 3.04 -> "3").
+format_column_default <- function(x) {
+  if (is.numeric(x)) {
+    whole <- all(x == round(x), na.rm = TRUE)
+    formatC(x, format = "f", digits = if (whole) 0L else default_digits)
+  } else {
+    format(x, trim = TRUE)
+  }
+}
+
+# Map of LaTeX special characters to their escaped forms.
+latex_special_chars <- c(
+  "\\" = "\\textbackslash{}",
+  "~"  = "\\textasciitilde{}",
+  "^"  = "\\textasciicircum{}",
+  "&"  = "\\&",
+  "%"  = "\\%",
+  "$"  = "\\$",
+  "#"  = "\\#",
+  "_"  = "\\_",
+  "{"  = "\\{",
+  "}"  = "\\}"
+)
+
+# Escape LaTeX special characters in a character vector. Vendored from
+# gt::escape_latex() (the only thing the package used gt for) to drop a heavy
+# dependency. Each special character is replaced exactly once in a single pass,
+# so introduced escapes are not themselves re-escaped; NA is returned unchanged.
+escape_latex <- function(text) {
+  if (length(text) < 1) return(text)
+  na_text <- is.na(text)
+  if (all(na_text)) return(text)
+
+  m <- gregexpr("[\\\\&%$#_{}~^]", text[!na_text], perl = TRUE)
+  specials <- regmatches(text[!na_text], m)
+  regmatches(text[!na_text], m) <- lapply(specials, function(x) latex_special_chars[x])
+  text
 }
 
 # collapse rows and flatten into a single character vector
@@ -60,6 +127,10 @@ format_group_heads <- function(
 }
 
 format_colummn_spanners <- function(spanner, add_indent_col = FALSE) {
+
+  # `asplit()` hands us a 1D array; strip dims so dplyr::if_else() (which rejects
+  # arrays as a condition) works on `is.na(spanner)` below
+  spanner <- as.vector(spanner)
 
   # calculate number of spanned columns
   occurences <- table(spanner)

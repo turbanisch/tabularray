@@ -1,0 +1,35 @@
+url: https://turbanisch.github.io/tabularray/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Create a table
+  desc: Initialize a data frame as a tblr table object.
+  contents:
+  - tblr
+
+- title: Style columns
+  desc: Set per-column properties and spanning headers.
+  contents:
+  - set_alignment
+  - set_column_labels
+  - set_column_spanner
+
+- title: Style the table
+  desc: Themes and presets controlling the overall appearance.
+  contents:
+  - set_theme
+
+- title: Low-level LaTeX interface
+  desc: Direct access to tabularray's inner and outer specifications.
+  contents:
+  - set_interface
+  - set_options
+  - set_source_notes
+
+- title: Render
+  desc: Produce LaTeX markup from a tblr object.
+  contents:
+  - tblr_as_latex
+  - print.tblr

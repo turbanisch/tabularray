@@ -28,7 +28,8 @@ df <- tibble(
 x <- tblr(df, type = "float", caption = "A table with notes")
 
 x |> set_source_notes(
- Source = "Built-in R dataset",
- Note = "This dataset comes with every R installation and is available without explicitly loading it."
+  Source = "Built-in R dataset",
+  Note = paste("This dataset comes with every R installation and is",
+               "available without explicitly loading it.")
 )
 }

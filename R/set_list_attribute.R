@@ -107,13 +107,21 @@ set_options <- function(x, ...) {
 #'   value = c(0.17, 0.23, 11.3, 17, 2.4)
 #' )
 #'
-#'x <- tblr(df, type = "float", caption = "A table with notes")
+#' x <- tblr(df, type = "float", caption = "A table with notes")
 #'
-#'x |> set_source_notes(
-#'  Source = "Built-in R dataset",
-#'  Note = "This dataset comes with every R installation and is available without explicitly loading it."
-#')
+#' x |> set_source_notes(
+#'   Source = "Built-in R dataset",
+#'   Note = paste("This dataset comes with every R installation and is",
+#'                "available without explicitly loading it.")
+#' )
 set_source_notes <- function(x, ...) {
-  stopifnot(attr(x,"type") %in% c("float", "break"))
+  stop_if_not_tblr(x)
+  if (!attr(x, "type") %in% c("float", "break")) {
+    rlang::abort(c(
+      "Source notes are only supported for `float` and `break` tables.",
+      x = glue::glue('This table has `type = "{attr(x, "type")}"`.'),
+      i = 'Create it with `tblr(type = "float")` (or "break") to add notes.'
+    ))
+  }
   set_list_attribute(x, "options", names_prefix = "remark", ...)
 }

@@ -68,23 +68,20 @@ tblr_as_latex <- function(x) {
   if (is_grouped && theme$row_group_indent) header <- str_c("& ", header)
 
   # collapse body
-  text_column_names <- boxhead |>
-    filter(is_text, type %in% c("default", "group")) |>
-    pull(variable)
-
   n_default_columns <- sum(boxhead$type == "default")
 
   x_chr <- x |>
-    # interpret any text that was in the dataset before tblr() was called as *not* formatted for LaTeX -> escape
-    # NA is contagious, defuse by turning into character string ("NA")
+    # escape whatever is character *now* (re-derived from the column's actual
+    # type rather than a snapshot taken at tblr() time). NA is contagious, so
+    # defuse it by turning it into the literal string "NA".
     mutate(across(
-      all_of(text_column_names),
-      \(s) gt::escape_latex(replace_na(s, "NA"))
+      where(is.character),
+      \(s) escape_latex(replace_na(s, "NA"))
     )) |>
-    # convert any remaining non-text columns to text at the end
+    # convert any remaining non-character columns to text at the end
     mutate(across(
       .cols = where(\(x) !is.character(x)),
-      .fns = \(x) format(x, digits = 2L, trim = TRUE)
+      .fns = format_column_default
     ))
 
   if (!is_grouped) {
@@ -119,8 +116,14 @@ tblr_as_latex <- function(x) {
       str_flatten(collapse = "\n", na.rm = TRUE)
   }
 
-  # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
-  stopifnot(!"colspec" %in% names(interface))
+  # prepend updated colspec from boxhead to interface (error if already set via `set_interface()`)
+  if ("colspec" %in% names(interface)) {
+    rlang::abort(c(
+      "The column specification (`colspec`) is managed by `tblr`.",
+      x = "It was set directly with `set_interface(colspec = ...)`.",
+      i = "Use `set_alignment()` to control the column specification instead."
+    ))
+  }
   colspec <- boxhead |>
     filter(type == "default") |>
     pull(alignment) |>
@@ -194,6 +197,6 @@ tblr_as_latex <- function(x) {
     align_ampersand() |>
     indent_lines()
 
-  # assign class "knit_asis"
-  knitr::asis_output(out)
+  # assign class "knit_asis" (without requiring knitr at runtime)
+  as_knit_asis(out)
 }

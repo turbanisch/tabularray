@@ -23,7 +23,12 @@ set_column_spanner <- function(x, ...) {
   stop_if_not_tblr(x)
   spanners <- attr(x, "spanners")
   kwargs <- rlang::list2(...)
-  stopifnot(all(map_lgl(kwargs, rlang::is_formula)))
+  if (!all(map_lgl(kwargs, rlang::is_formula))) {
+    rlang::abort(c(
+      "Each spanner must be a two-sided formula.",
+      i = 'For example: `set_column_spanner(c(height, mass) ~ "Group 1")`.'
+    ))
+  }
 
   # initialize new row with NAs
   new_spanner_row <- spanners[1,]
