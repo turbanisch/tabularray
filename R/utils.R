@@ -218,6 +218,11 @@ align_ampersand <- function(s) {
   # track lines by adding row number
   names(line_list) <- seq_along(line_list)
 
+  # nothing to align when no line has more than one cell (e.g. a single-column
+  # table has no ampersands). Without this, every line matches both the
+  # "full row" and "structural line" filters below and gets emitted twice.
+  if (max(lengths(line_list)) <= 1L) return(s)
+
   # modify only lines that contain ampersands (i.e., regular cells)
   # add missing trailing ampersands
   align_list <- line_list |>

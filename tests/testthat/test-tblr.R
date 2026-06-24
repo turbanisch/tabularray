@@ -44,3 +44,12 @@ test_that("tblr_as_latex returns a knit_asis string", {
   out <- tblr_as_latex(tblr(countries()))
   expect_s3_class(out, "knit_asis")
 })
+
+test_that("single-column tables render without duplicated lines", {
+  # a single-column table has no ampersands; align_ampersand() must not emit
+  # every line twice (regression)
+  out <- as_latex(tblr(tibble::tibble(account = c("a", "b"))))
+  expect_equal(stringr::str_count(out, stringr::fixed("\\toprule")), 1L)
+  expect_equal(stringr::str_count(out, stringr::fixed("\\begin{center}")), 1L)
+  expect_equal(stringr::str_count(out, stringr::fixed("account")), 1L)
+})
