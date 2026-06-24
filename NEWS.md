@@ -23,6 +23,9 @@
   type at render time rather than recorded when `tblr()` is called. Columns
   formatted before *or* after `tblr()` are now both escaped correctly.
 
+* `set_column_spanner()` now errors when a spanner targets non-adjacent
+  columns, which previously rendered a spanner over the wrong columns.
+
 * Functions emit informative errors (e.g. when a caption is missing, more than
   one grouping variable is supplied, or `colspec` is set via `set_interface()`),
   and warn when `set_colspec()` / `set_column_labels()` are given a column

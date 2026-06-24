@@ -34,9 +34,26 @@ set_column_spanner <- function(x, ...) {
   new_spanner_row <- spanners[1,]
   new_spanner_row[1,] <- NA
 
+  # the rendered (non-group) columns, in display order
+  boxhead <- attr(x, "boxhead")
+  default_vars <- boxhead$variable[boxhead$type == "default"]
+
   # replace NA with LHS, location specified by tidy-select
   for (i in seq_along(kwargs)) {
     expr <- rlang::f_lhs(kwargs[[i]])
+
+    # a spanner must cover a contiguous block of displayed columns, otherwise
+    # the rendered \SetCell would span the wrong (intervening) columns
+    selected <- names(tidyselect::eval_select(expr, data = x))
+    pos <- sort(match(intersect(selected, default_vars), default_vars))
+    if (length(pos) > 1 && any(diff(pos) != 1L)) {
+      rlang::abort(c(
+        "A spanner must cover a contiguous range of columns.",
+        x = glue::glue("`{deparse(expr)}` selects non-adjacent columns: {paste(selected, collapse = ', ')}."),
+        i = "Use a separate spanner formula for each block of adjacent columns."
+      ))
+    }
+
     new_spanner_row <- new_spanner_row |>
       mutate(across(
         {{ expr }},

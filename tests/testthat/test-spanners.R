@@ -31,3 +31,25 @@ test_that("spanners draw cmidrules under spanned columns", {
   out <- as_latex(tblr(countries()) |> set_column_spanner(!value ~ "Region"))
   expect_match(out, "\\\\cmidrule")
 })
+
+test_that("a spanner must cover contiguous columns", {
+  # continent and value are not adjacent (country sits between them)
+  expect_error(
+    tblr(countries()) |> set_column_spanner(c(continent, value) ~ "X"),
+    "contiguous"
+  )
+  expect_no_error(
+    tblr(countries()) |> set_column_spanner(c(continent, country) ~ "X")
+  )
+})
+
+test_that("a group column between data columns is transparent for contiguity", {
+  # grouping by `continent` removes it from the displayed columns, so a spanner
+  # over the remaining (country, value) columns is contiguous
+  expect_no_error(
+    countries() |>
+      dplyr::group_by(continent) |>
+      tblr() |>
+      set_column_spanner(c(country, value) ~ "X")
+  )
+})
