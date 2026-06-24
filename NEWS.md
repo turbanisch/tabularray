@@ -1,4 +1,4 @@
-# tabularray (development version)
+# tabularray 0.0.0.9000
 
 ## Bug fixes
 
