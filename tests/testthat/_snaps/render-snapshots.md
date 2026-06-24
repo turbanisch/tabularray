@@ -67,7 +67,7 @@
           \end{talltabs}
       \end{center}
 
-# set_alignment example
+# set_colspec example
 
     Code
       cat(as_latex(x))

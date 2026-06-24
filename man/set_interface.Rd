@@ -20,7 +20,7 @@ This function gives you low-level access to the mandatory argument of a \code{tb
 \details{
 The mandatory argument is a list of (mostly) key-value pairs. Use named arguments to specify them with this function. Both the names and values you provide are assumed to be raw LaTeX strings; characters that have a special meaning in LaTeX will not be escaped. To set a key without a value (e.g., "hlines"), pass \code{character(0)} as in the example below. Note that the value can be a vector with more than one element. Each element is automatically wrapped in curly braces.
 
-Shortcut functions targeting specific parts of the interface such as \code{set_alignment()} take precedence over the specifications you make here.
+Shortcut functions targeting specific parts of the interface such as \code{set_colspec()} take precedence over the specifications you make here.
 }
 \examples{
 # Produce the following specification in LaTeX:

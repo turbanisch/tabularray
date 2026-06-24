@@ -121,7 +121,7 @@ tblr_as_latex <- function(x) {
     rlang::abort(c(
       "The column specification (`colspec`) is managed by `tblr`.",
       x = "It was set directly with `set_interface(colspec = ...)`.",
-      i = "Use `set_alignment()` to control the column specification instead."
+      i = "Use `set_colspec()` to control the column specification instead."
     ))
   }
   colspec <- boxhead |>

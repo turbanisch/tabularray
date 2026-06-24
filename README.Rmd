@@ -72,7 +72,7 @@ df |>
     Note = "Entry C3PO altered to test characters that have a special meaning in LaTeX.",
     Source = "R package \\texttt{dplyr}"
   ) |> 
-  set_alignment(height:birth_year ~ "X[r]") |> 
+  set_colspec(height:birth_year ~ "X[r]") |>
   set_column_labels(
     name = "",
     height = "Height",

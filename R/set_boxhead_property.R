@@ -43,14 +43,14 @@ set_boxhead_property <- function(x, property, ...) {
 
 # wrapper functions -------------------------------------------------------
 
-#' Set column alignment
+#' Set column specifications
 #'
-#' Set the column alignment and other `colspec` properties. By default, columns will be either left-aligned ("l") or right-aligned ("r"), if they are numeric.
+#' Set the column specification (`colspec`) of one or more columns. The column specification controls alignment and, more generally, the `tabularray` column type. By default, columns are left-aligned ("l"), or right-aligned ("r") if they are numeric.
 #'
-#' Column specifications can be more sophisticated than just left ("l"), center ("c"), and right ("r"). In `tabularray`, all column types are derived from the column type `Q`. Useful shorthands include `X` (to evenly distribute columns given a fixed table width) and `S` (to format columns using `siunitx`).
+#' Column specifications can be more than just left ("l"), center ("c"), and right ("r"). In `tabularray`, all column types are derived from the column type `Q`. Useful shorthands include `X` (to evenly distribute columns given a fixed table width) and `S` (to format columns using `siunitx`, e.g. `"S[table-format=2.3]"`).
 #'
 #' @param x A `tblr` table object.
-#' @param ... Expressions for the assignment of column alignment (and column specifications more generally). Expressions can be named arguments of the form `<column name> = <alignment>` or make use of tidy-select. When using tidy-select, expressions have to be two-sided formulas (i.e., of the form `<LHS> ~ <RHS>`). In this case, the left-hand side is used to identify selections of columns and the right-hand side to specify the column alignment. Note that the column specifications you supply are assumed to be raw LaTeX strings; characters that have a special meaning in LaTeX will not be escaped.
+#' @param ... Expressions for the assignment of column specifications. Expressions can be named arguments of the form `<column name> = <colspec>` or make use of tidy-select. When using tidy-select, expressions have to be two-sided formulas (i.e., of the form `<LHS> ~ <RHS>`). In this case, the left-hand side is used to identify selections of columns and the right-hand side to specify the column specification. Note that the column specifications you supply are assumed to be raw LaTeX strings; characters that have a special meaning in LaTeX will not be escaped.
 #'
 #' @return A `tblr` table object.
 #' @export
@@ -64,8 +64,8 @@ set_boxhead_property <- function(x, property, ...) {
 #' )
 #'
 #' tblr(df) |>
-#'   set_alignment(value = "X", starts_with("c") ~ "c")
-set_alignment <- function(x, ...) {
+#'   set_colspec(value = "X", starts_with("c") ~ "c")
+set_colspec <- function(x, ...) {
   set_boxhead_property(x = x, property = "alignment", ...)
 }
 

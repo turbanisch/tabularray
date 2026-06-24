@@ -1,7 +1,7 @@
 # Input validation and informative errors/warnings.
 
 test_that("non-tblr input is rejected with a helpful message", {
-  expect_error(set_alignment(mtcars, mpg = "c"), "must be a `tblr` object")
+  expect_error(set_colspec(mtcars, mpg = "c"), "must be a `tblr` object")
   expect_error(tblr_as_latex(mtcars), "must be a `tblr` object")
 })
 
@@ -45,7 +45,7 @@ test_that("unknown column names in set_*() warn instead of silently no-op", {
     "unknown column"
   )
   expect_warning(
-    tblr(countries()) |> set_alignment(nope = "c"),
+    tblr(countries()) |> set_colspec(nope = "c"),
     "unknown column"
   )
 })

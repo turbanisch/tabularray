@@ -44,7 +44,7 @@ set_list_attribute <- function(x, attribute_name, names_prefix = NULL, ...) {
 #'
 #' The mandatory argument is a list of (mostly) key-value pairs. Use named arguments to specify them with this function. Both the names and values you provide are assumed to be raw LaTeX strings; characters that have a special meaning in LaTeX will not be escaped. To set a key without a value (e.g., "hlines"), pass `character(0)` as in the example below. Note that the value can be a vector with more than one element. Each element is automatically wrapped in curly braces.
 #'
-#' Shortcut functions targeting specific parts of the interface such as `set_alignment()` take precedence over the specifications you make here.
+#' Shortcut functions targeting specific parts of the interface such as `set_colspec()` take precedence over the specifications you make here.
 #'
 #' @param x A `tblr` table object.
 #' @param ... Named arguments to be spliced into key-value pairs within the mandatory argument of a `tblr` environment.

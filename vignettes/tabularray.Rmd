@@ -99,7 +99,7 @@ Two things to keep in mind:
   text column.
 
 * **Labels, spanners, alignment, notes, and options are raw LaTeX.** Values you
-  pass to `set_column_labels()`, `set_column_spanner()`, `set_alignment()`,
+  pass to `set_column_labels()`, `set_column_spanner()`, `set_colspec()`,
   `set_source_notes()`, `set_interface()`, and `set_options()` are inserted
   verbatim, so you can use LaTeX commands there — and you must escape any special
   characters yourself (e.g. write `R\&D`, not `R&D`).

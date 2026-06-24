@@ -15,13 +15,17 @@
 
 ## Improvements
 
+* `set_alignment()` has been renamed to `set_colspec()`, which better reflects
+  that it sets the full `tabularray` column specification (alignment, but also
+  column types such as `X` or `siunitx`'s `S`).
+
 * Whether a column's contents are escaped is now determined from the column's
   type at render time rather than recorded when `tblr()` is called. Columns
   formatted before *or* after `tblr()` are now both escaped correctly.
 
 * Functions emit informative errors (e.g. when a caption is missing, more than
   one grouping variable is supplied, or `colspec` is set via `set_interface()`),
-  and warn when `set_alignment()` / `set_column_labels()` are given a column
+  and warn when `set_colspec()` / `set_column_labels()` are given a column
   name that does not exist.
 
 ## Dependencies

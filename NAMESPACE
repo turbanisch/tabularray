@@ -2,7 +2,7 @@
 
 S3method(knitr::knit_print,tblr)
 S3method(print,tblr)
-export(set_alignment)
+export(set_colspec)
 export(set_column_labels)
 export(set_column_spanner)
 export(set_interface)
