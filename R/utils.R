@@ -61,6 +61,10 @@ format_group_heads <- function(
 
 format_colummn_spanners <- function(spanner, add_indent_col = FALSE) {
 
+  # `asplit()` hands us a 1D array; strip dims so dplyr::if_else() (which rejects
+  # arrays as a condition) works on `is.na(spanner)` below
+  spanner <- as.vector(spanner)
+
   # calculate number of spanned columns
   occurences <- table(spanner)
   n_span <- as.vector(occurences[spanner])
