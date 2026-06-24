@@ -27,7 +27,12 @@ collapse_rows <- function(l) {
 }
 
 stop_if_not_tblr <- function(x) {
-  stopifnot("tblr" %in% class(x))
+  if (!inherits(x, "tblr")) {
+    rlang::abort(c(
+      "`x` must be a `tblr` object.",
+      i = "Create one with `tblr()` before adding styling or rendering it."
+    ))
+  }
 }
 
 # Tag rendered markup so knitr emits it verbatim. The `knit_asis` class is only

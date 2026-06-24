@@ -24,7 +24,12 @@ tblr <- function(df,
 
   # sanity checks
   type <- rlang::arg_match(type, c("simple", "float", "break"))
-  if (type != "simple") stopifnot(!is_null(caption))
+  if (type != "simple" && is_null(caption)) {
+    rlang::abort(c(
+      glue::glue('A `caption` is required when `type` is "{type}".'),
+      i = 'Supply `caption`, or use `type = "simple"` for an untitled table.'
+    ))
+  }
 
   # convert factor to character (to harmonize "text-like" column types)
   df <- df |> mutate(across(where(is.factor), as.character))
@@ -53,7 +58,16 @@ tblr <- function(df,
   )
 
   # identify group column (if any)
-  stopifnot(length(group_vars(df)) <= 1L)
+  if (length(group_vars(df)) > 1L) {
+    rlang::abort(c(
+      "`tblr()` supports at most one grouping variable.",
+      x = glue::glue(
+        "`df` is grouped by {length(group_vars(df))}: ",
+        "{paste(group_vars(df), collapse = ', ')}."
+      ),
+      i = "Reduce the grouping with `dplyr::group_by()` before calling `tblr()`."
+    ))
+  }
   is_group_var <- colnames(df) %in% group_vars(df)
   col_type <- if_else(is_group_var, "group", "default")
   df <- ungroup(df)

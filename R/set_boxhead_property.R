@@ -20,6 +20,16 @@ set_boxhead_property <- function(x, property, ...) {
       # note that names are a property of the entire list, not of an individual element
       target_col_names <- names(kwargs)[i]
       replacement <- kwargs[[i]]
+
+      # the tidy-select path errors on unknown columns via eval_select(); guard
+      # the named-argument path, which would otherwise silently do nothing
+      unknown <- setdiff(target_col_names, boxhead$variable)
+      if (length(unknown)) {
+        rlang::warn(glue::glue(
+          "Ignoring unknown column{if (length(unknown) > 1L) 's' else ''}: ",
+          "{paste(unknown, collapse = ', ')}."
+        ))
+      }
     }
 
     # replace value in the property-column in rows corresponding to those variables

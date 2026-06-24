@@ -119,8 +119,14 @@ tblr_as_latex <- function(x) {
       str_flatten(collapse = "\n", na.rm = TRUE)
   }
 
-  # prepend updated colspec from boxhead to interface (warn if already set via `set_interface()`)
-  stopifnot(!"colspec" %in% names(interface))
+  # prepend updated colspec from boxhead to interface (error if already set via `set_interface()`)
+  if ("colspec" %in% names(interface)) {
+    rlang::abort(c(
+      "The column specification (`colspec`) is managed by `tblr`.",
+      x = "It was set directly with `set_interface(colspec = ...)`.",
+      i = "Use `set_alignment()` to control the column specification instead."
+    ))
+  }
   colspec <- boxhead |>
     filter(type == "default") |>
     pull(alignment) |>
