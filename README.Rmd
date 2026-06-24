@@ -26,22 +26,6 @@ This package lets you typeset R objects such as dataframes in LaTeX using [tabul
 [1]: https://github.com/lvjr/tabularray
 [2]: https://github.com/rstudio/gt
 
-## Alternatives
-
-The popular table packages [gt][2], [kableExtra][3], and [flextable][4] do not
-target the [tabularray][1] LaTeX package. The one that does is [tinytable][5] — a
-feature-complete, actively developed package that offers several output formats
-and can address `tabularray`'s inner and outer specifications directly. This
-package predates `tinytable` and is, for most purposes, superseded by it.
-
-`tabularray` may still hit a sweet spot if you want a small tool tailor-made for
-`tabularray` LaTeX output, with a tidyverse- and gt-inspired interface for the
-most common formatting tasks.
-
-[3]: https://haozhu233.github.io/kableExtra/
-[4]: https://davidgohel.github.io/flextable/
-[5]: https://vincentarelbundock.github.io/tinytable/
-
 ## Installation
 
 You can install the development version of tabularray from [GitHub](https://github.com) with:
@@ -128,3 +112,19 @@ The `tabularray_packages.sty` file would then contain the dependencies listed be
 ```
 
 You do not need to modify any chunk options. knitr will automatically embed the LaTeX markup verbatim.
+
+## Alternatives
+
+The popular table packages [gt][2], [kableExtra][3], and [flextable][4] do not
+target the [tabularray][1] LaTeX package. The one that does is [tinytable][5] — a
+feature-complete, actively developed package that offers several output formats
+and can address `tabularray`'s inner and outer specifications directly. This
+package predates `tinytable` and is, for most purposes, superseded by it.
+
+`tabularray` may still hit a sweet spot if you want a small tool tailor-made for
+`tabularray` LaTeX output, with a tidyverse- and gt-inspired interface for the
+most common formatting tasks.
+
+[3]: https://haozhu233.github.io/kableExtra/
+[4]: https://davidgohel.github.io/flextable/
+[5]: https://vincentarelbundock.github.io/tinytable/

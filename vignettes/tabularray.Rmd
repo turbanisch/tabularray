@@ -28,10 +28,6 @@ show_latex <- function(x) cat(as.character(tblr_as_latex(x)))
 `tblr()` and then chaining `set_*()` functions to add styling, before rendering
 with `tblr_as_latex()`.
 
-```
-data frame  |>  tblr()  |>  set_*()  |>  ...  |>  tblr_as_latex()
-```
-
 ## A first table
 
 `tblr()` initializes a data frame as a table object. Printing it (or calling
@@ -52,22 +48,10 @@ default to the column names.
 
 ## Numbers
 
-By default, numbers are rounded to **two decimal places**; integer and
-whole-valued columns are printed without decimals:
-
-```{r}
-tibble(
-  year  = c(2021L, 2022L, 2023L),
-  share = c(3.04, 12.5, 100.5)
-) |>
-  tblr() |>
-  show_latex()
-```
-
-`tabularray` does **not** try to be a number-formatting toolkit. For currency,
+`tabularray` does not try to be a number-formatting toolkit. For currency,
 percentages, thousands separators, significant digits, or any other per-column
-formatting, format the column **before** calling `tblr()` with a package such as
-[scales](https://scales.r-lib.org) or `base::formatC()` / `base::sprintf()`:
+formatting, format the column before calling `tblr()` — for example with
+[scales](https://scales.r-lib.org), `base::formatC()`, or `base::sprintf()`:
 
 ```{r}
 tibble(
@@ -79,9 +63,21 @@ tibble(
   show_latex()
 ```
 
-Note that the formatted `price` is now a text column, so the literal `$` it
-contains is escaped to `\$` for you — write the plain character you want and let
-`tblr` handle the escaping.
+The formatted `price` is now a text column, so the literal `$` it contains is
+escaped to `\$` for you — write the plain character you want and let `tblr`
+handle the escaping.
+
+Columns you leave as numbers get a sensible default: two decimal places, with
+integer and whole-valued columns printed without decimals.
+
+```{r}
+tibble(
+  year  = c(2021L, 2022L, 2023L),
+  share = c(3.04, 12.5, 100.5)
+) |>
+  tblr() |>
+  show_latex()
+```
 
 ## Escaping
 

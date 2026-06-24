@@ -24,23 +24,6 @@ LaTeX output. It intends to maximize access the functionality of the
 (LaTeX) [tabularray](https://github.com/lvjr/tabularray) package while
 offering convenience functions for the most common formatting tasks.
 
-## Alternatives
-
-The popular table packages [gt](https://github.com/rstudio/gt),
-[kableExtra](https://haozhu233.github.io/kableExtra/), and
-[flextable](https://davidgohel.github.io/flextable/) do not target the
-[tabularray](https://github.com/lvjr/tabularray) LaTeX package. The one
-that does is
-[tinytable](https://vincentarelbundock.github.io/tinytable/) — a
-feature-complete, actively developed package that offers several output
-formats and can address `tabularray`’s inner and outer specifications
-directly. This package predates `tinytable` and is, for most purposes,
-superseded by it.
-
-`tabularray` may still hit a sweet spot if you want a small tool
-tailor-made for `tabularray` LaTeX output, with a tidyverse- and
-gt-inspired interface for the most common formatting tasks.
-
 ## Installation
 
 You can install the development version of tabularray from
@@ -136,3 +119,20 @@ listed below:
 
 You do not need to modify any chunk options. knitr will automatically
 embed the LaTeX markup verbatim.
+
+## Alternatives
+
+The popular table packages [gt](https://github.com/rstudio/gt),
+[kableExtra](https://haozhu233.github.io/kableExtra/), and
+[flextable](https://davidgohel.github.io/flextable/) do not target the
+[tabularray](https://github.com/lvjr/tabularray) LaTeX package. The one
+that does is
+[tinytable](https://vincentarelbundock.github.io/tinytable/) — a
+feature-complete, actively developed package that offers several output
+formats and can address `tabularray`’s inner and outer specifications
+directly. This package predates `tinytable` and is, for most purposes,
+superseded by it.
+
+`tabularray` may still hit a sweet spot if you want a small tool
+tailor-made for `tabularray` LaTeX output, with a tidyverse- and
+gt-inspired interface for the most common formatting tasks.
