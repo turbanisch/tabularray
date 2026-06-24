@@ -1,0 +1,186 @@
+# tabularray
+
+This package lets you typeset R objects such as dataframes in LaTeX
+using [tabularray](https://github.com/lvjr/tabularray).
+[tabularray](https://github.com/lvjr/tabularray) is a LaTeX package
+developed by Jianrui Lyu that provides a modern and unified alternative
+to the established space of table-generating packages in LaTeX. This
+implementation in R is inspired by the R package
+[gt](https://github.com/rstudio/gt). That means we construct a table
+iteratively, adding formatting by chaining functions together. Unlike
+[gt](https://github.com/rstudio/gt), however, this package focuses on
+LaTeX output. It intends to maximize access the functionality of the
+(LaTeX) [tabularray](https://github.com/lvjr/tabularray) package while
+offering convenience functions for the most common formatting tasks.
+
+## Installation
+
+You can install the development version of tabularray from
+[GitHub](https://github.com) with:
+
+``` r
+
+# install.packages("devtools")
+devtools::install_github("turbanisch/tabularray")
+```
+
+## Examples
+
+In the example below, we format the same dataset twice to demonstrate
+how tabularray works out of the box and with more fine-tuning applied.
+
+``` r
+
+library(dplyr)
+library(tabularray)
+
+df <- starwars |>
+  filter(homeworld == "Tatooine", !name %in% c("Anakin Skywalker", "Darth Vader")) |>
+  select(name, height, mass, sex, birth_year) |>
+  arrange(desc(birth_year))
+
+df[1, 1] <- "C$PO"
+```
+
+### Simple table
+
+``` r
+
+tblr(df)
+```
+
+![](reference/figures/simple-table.png)
+
+### Table with markup
+
+``` r
+
+df |> 
+  mutate(sex = stringr::str_to_title(sex)) |> 
+  group_by(sex) |>
+  tblr(type = "float", caption = "Starwars Creatures from Tatooine") |> 
+  set_source_notes(
+    Note = "Entry C3PO altered to test characters that have a special meaning in LaTeX.",
+    Source = "R package \\texttt{dplyr}"
+  ) |> 
+  set_alignment(height:birth_year ~ "X[r]") |> 
+  set_column_labels(
+    name = "",
+    height = "Height",
+    mass = "Mass",
+    birth_year = "Birth Year"
+  ) |> 
+  set_theme(row_group_style = "panel") |> 
+  set_interface(width = "0.7\\linewidth") |> 
+  set_column_spanner(
+    c(height, mass) ~ "Group 1",
+    birth_year ~ "Group 2"
+  ) |> 
+  set_column_spanner(!name ~ "All my vars")
+```
+
+![](reference/figures/marked-up-table.png)
+
+## Usage with Quarto and R Markdown
+
+The tabularray package produces LaTeX code that you can copy and paste
+into your favorite LaTeX editor. However, it is designed to shine in
+combination with literate programming. Integration is seamless: just
+make sure to load the necessary LaTeX packages in your document.
+
+In a Quarto document’s YAML metadata, please include
+
+``` yaml
+format:
+  pdf:
+    include-in-header: tabularray-packages.sty
+```
+
+The `tabularray_packages.sty` file would then contain the dependencies
+listed below:
+
+``` latex
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+```
+
+You do not need to modify any chunk options. knitr will automatically
+embed the LaTeX markup verbatim.
+
+## Alternatives
+
+The popular table packages [gt](https://github.com/rstudio/gt),
+[kableExtra](https://haozhu233.github.io/kableExtra/), and
+[flextable](https://davidgohel.github.io/flextable/) do not target the
+[tabularray](https://github.com/lvjr/tabularray) LaTeX package. The one
+that does is
+[tinytable](https://vincentarelbundock.github.io/tinytable/) — a
+feature-complete, actively developed package that offers several output
+formats and can address `tabularray`’s inner and outer specifications
+directly. This package predates `tinytable` and is, for most purposes,
+superseded by it.
+
+`tabularray` may still hit a sweet spot if you want a small tool
+tailor-made for `tabularray` LaTeX output, with a tidyverse- and
+gt-inspired interface for the most common formatting tasks.
+
+# Package index
+
+## Create a table
+
+Initialize a data frame as a tblr table object.
+
+- [`tblr()`](https://turbanisch.github.io/tabularray/reference/tblr.md)
+  :
+
+  Create a **tblr** table object
+
+## Style columns
+
+Set per-column properties and spanning headers.
+
+- [`set_alignment()`](https://turbanisch.github.io/tabularray/reference/set_alignment.md)
+  : Set column alignment
+- [`set_column_labels()`](https://turbanisch.github.io/tabularray/reference/set_column_labels.md)
+  : Set column labels
+- [`set_column_spanner()`](https://turbanisch.github.io/tabularray/reference/set_column_spanner.md)
+  : Set column spanners
+
+## Style the table
+
+Themes and presets controlling the overall appearance.
+
+- [`set_theme()`](https://turbanisch.github.io/tabularray/reference/set_theme.md)
+  : Set theme options
+
+## Low-level LaTeX interface
+
+Direct access to tabularray’s inner and outer specifications.
+
+- [`set_interface()`](https://turbanisch.github.io/tabularray/reference/set_interface.md)
+  : Set table interface
+- [`set_options()`](https://turbanisch.github.io/tabularray/reference/set_options.md)
+  : Set table options
+- [`set_source_notes()`](https://turbanisch.github.io/tabularray/reference/set_source_notes.md)
+  : Add source notes
+
+## Render
+
+Produce LaTeX markup from a tblr object.
+
+- [`tblr_as_latex()`](https://turbanisch.github.io/tabularray/reference/tblr_as_latex.md)
+  :
+
+  Output a **tblr** object as LaTeX
+
+- [`print(`*`<tblr>`*`)`](https://turbanisch.github.io/tabularray/reference/print.tblr.md)
+  :
+
+  Print a **tblr** table object
+
+# Articles
+
+### All vignettes
+
+- [Get started with
+  tabularray](https://turbanisch.github.io/tabularray/articles/tabularray.md):
