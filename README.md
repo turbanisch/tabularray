@@ -7,8 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/tabularray)](https://CRAN.R-project.org/package=tabularray)
+[![R-CMD-check](https://github.com/turbanisch/tabularray/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/turbanisch/tabularray/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This package lets you typeset R objects such as dataframes in LaTeX
