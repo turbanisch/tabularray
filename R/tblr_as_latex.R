@@ -194,6 +194,6 @@ tblr_as_latex <- function(x) {
     align_ampersand() |>
     indent_lines()
 
-  # assign class "knit_asis"
-  knitr::asis_output(out)
+  # assign class "knit_asis" (without requiring knitr at runtime)
+  as_knit_asis(out)
 }

@@ -30,6 +30,18 @@ stop_if_not_tblr <- function(x) {
   stopifnot("tblr" %in% class(x))
 }
 
+# Tag rendered markup so knitr emits it verbatim. The `knit_asis` class is only
+# acted on when knitr processes the output, so we keep knitr a soft (Suggests)
+# dependency: generating the LaTeX string itself must work without knitr
+# installed (e.g. copy-pasting into a LaTeX editor).
+as_knit_asis <- function(x) {
+  if (requireNamespace("knitr", quietly = TRUE)) {
+    knitr::asis_output(x)
+  } else {
+    structure(x, class = "knit_asis")
+  }
+}
+
 # Number of decimal places used for non-integer numeric columns by default.
 # Single knob for the package-wide default; per-column currency/percent/
 # significant-digit formatting is the user's job, done upstream (before `tblr()`)
