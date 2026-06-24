@@ -46,12 +46,13 @@ df |> tblr() |> show_latex()
 Numeric columns are right-aligned, text columns left-aligned. Column labels
 default to the column names.
 
-## Numbers
+## Formatting
 
-`tabularray` does not try to be a number-formatting toolkit. For currency,
-percentages, thousands separators, significant digits, or any other per-column
-formatting, format the column before calling `tblr()` — for example with
-[scales](https://scales.r-lib.org), `base::formatC()`, or `base::sprintf()`:
+`tabularray` does not try to be a formatting toolkit. For currency,
+percentages, thousands separators, significant digits, custom date formats, or
+any other per-column formatting, format the column before calling `tblr()` — for
+example with [scales](https://scales.r-lib.org), `base::format()`,
+`base::formatC()`, or `base::sprintf()`:
 
 ```{r}
 tibble(
@@ -67,8 +68,9 @@ The formatted `price` is now a text column, so the literal `$` it contains is
 escaped to `\$` for you — write the plain character you want and let `tblr`
 handle the escaping.
 
-Columns you leave as numbers get a sensible default: two decimal places, with
-integer and whole-valued columns printed without decimals.
+Columns you leave untouched are converted with sensible defaults: numbers get
+two decimal places (integer and whole-valued columns without), and dates,
+logicals, and other types are rendered as R would display them.
 
 ```{r}
 tibble(
