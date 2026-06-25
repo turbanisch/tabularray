@@ -51,3 +51,6 @@ rsconnect/
 # MacOS system files
 .DS_Store
 .Rproj.user
+
+# local-only personal notes
+/TODO.md
