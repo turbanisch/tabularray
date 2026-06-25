@@ -21,6 +21,12 @@
 
 ### Improvements
 
+- `set_alignment()` has been renamed to
+  [`set_colspec()`](https://turbanisch.github.io/tabularray/reference/set_colspec.md),
+  which better reflects that it sets the full `tabularray` column
+  specification (alignment, but also column types such as `X` or
+  `siunitx`’s `S`).
+
 - Whether a column’s contents are escaped is now determined from the
   column’s type at render time rather than recorded when
   [`tblr()`](https://turbanisch.github.io/tabularray/reference/tblr.md)
@@ -28,11 +34,15 @@
   [`tblr()`](https://turbanisch.github.io/tabularray/reference/tblr.md)
   are now both escaped correctly.
 
+- [`set_column_spanner()`](https://turbanisch.github.io/tabularray/reference/set_column_spanner.md)
+  now errors when a spanner targets non-adjacent columns, which
+  previously rendered a spanner over the wrong columns.
+
 - Functions emit informative errors (e.g. when a caption is missing,
   more than one grouping variable is supplied, or `colspec` is set via
   [`set_interface()`](https://turbanisch.github.io/tabularray/reference/set_interface.md)),
   and warn when
-  [`set_alignment()`](https://turbanisch.github.io/tabularray/reference/set_alignment.md)
+  [`set_colspec()`](https://turbanisch.github.io/tabularray/reference/set_colspec.md)
   /
   [`set_column_labels()`](https://turbanisch.github.io/tabularray/reference/set_column_labels.md)
   are given a column name that does not exist.

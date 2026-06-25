@@ -103,7 +103,7 @@
 <span>    Note <span class="op">=</span> <span class="st">"Entry C3PO altered to test characters that have a special meaning in LaTeX."</span>,</span>
 <span>    Source <span class="op">=</span> <span class="st">"R package \\texttt{dplyr}"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/set_alignment.html">set_alignment</a></span><span class="op">(</span><span class="va">height</span><span class="op">:</span><span class="va">birth_year</span> <span class="op">~</span> <span class="st">"X[r]"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/set_colspec.html">set_colspec</a></span><span class="op">(</span><span class="va">height</span><span class="op">:</span><span class="va">birth_year</span> <span class="op">~</span> <span class="st">"X[r]"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/set_column_labels.html">set_column_labels</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">""</span>,</span>
 <span>    height <span class="op">=</span> <span class="st">"Height"</span>,</span>
@@ -137,8 +137,8 @@
 <div class="section level2">
 <h2 id="alternatives">Alternatives<a class="anchor" aria-label="anchor" href="#alternatives"></a>
 </h2>
-<p>The popular table packages <a href="https://github.com/rstudio/gt" class="external-link">gt</a>, <a href="https://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a>, and <a href="https://davidgohel.github.io/flextable/" class="external-link">flextable</a> do not target the <a href="https://github.com/lvjr/tabularray" class="external-link">tabularray</a> LaTeX package. The one that does is <a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a> — a feature-complete, actively developed package that offers several output formats and can address <code>tabularray</code>’s inner and outer specifications directly. This package predates <code>tinytable</code> and is, for most purposes, superseded by it.</p>
-<p><code>tabularray</code> may still hit a sweet spot if you want a small tool tailor-made for <code>tabularray</code> LaTeX output, with a tidyverse- and gt-inspired interface for the most common formatting tasks.</p>
+<p>Among the popular table packages, <a href="https://github.com/rstudio/gt" class="external-link">gt</a>, <a href="https://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a>, and <a href="https://davidgohel.github.io/flextable/" class="external-link">flextable</a> don’t target the <a href="https://github.com/lvjr/tabularray" class="external-link">tabularray</a> LaTeX package. <a href="https://vincentarelbundock.github.io/tinytable/" class="external-link">tinytable</a> does — a capable, actively developed, multi-format alternative (LaTeX, HTML, Typst, Word) that for many projects is the better choice.</p>
+<p>This package is deliberately narrower: a tidyverse- and gt-inspired interface built only for <code>tabularray</code>. It leans on two things. First, opinionated defaults for layouts common in academic publishing — row-group “panel” styling, column spanners, and a natural stub column. Second, direct per-column access to raw <code>tabularray</code> code: column specifications (e.g. <code>siunitx</code> <code>S</code> or <code>X[r]</code> columns), labels, spanners, notes, and the inner/outer specifications all accept raw strings.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

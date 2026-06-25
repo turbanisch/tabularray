@@ -13,8 +13,8 @@ Initialize a data frame as a tblr table object.
 
 Set per-column properties and spanning headers.
 
-- [`set_alignment()`](https://turbanisch.github.io/tabularray/reference/set_alignment.md)
-  : Set column alignment
+- [`set_colspec()`](https://turbanisch.github.io/tabularray/reference/set_colspec.md)
+  : Set column specifications
 - [`set_column_labels()`](https://turbanisch.github.io/tabularray/reference/set_column_labels.md)
   : Set column labels
 - [`set_column_spanner()`](https://turbanisch.github.io/tabularray/reference/set_column_spanner.md)

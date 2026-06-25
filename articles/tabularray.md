@@ -53,13 +53,15 @@ df |> tblr() |> show_latex()
 Numeric columns are right-aligned, text columns left-aligned. Column
 labels default to the column names.
 
-## Numbers
+## Formatting
 
-`tabularray` does not try to be a number-formatting toolkit. For
-currency, percentages, thousands separators, significant digits, or any
-other per-column formatting, format the column before calling
+`tabularray` does not try to be a formatting toolkit. For currency,
+percentages, thousands separators, significant digits, custom date
+formats, or any other per-column formatting, format the column before
+calling
 [`tblr()`](https://turbanisch.github.io/tabularray/reference/tblr.md) —
 for example with [scales](https://scales.r-lib.org),
+[`base::format()`](https://rdrr.io/r/base/format.html),
 [`base::formatC()`](https://rdrr.io/r/base/formatc.html), or
 [`base::sprintf()`](https://rdrr.io/r/base/sprintf.html):
 
@@ -67,22 +69,26 @@ for example with [scales](https://scales.r-lib.org),
 
 tibble(
   item  = c("Widget", "Gadget"),
-  price = c(1999.5, 12.4)
+  price = c(1999.5, 12.4),
+  added = as.Date(c("2024-01-15", "2024-11-03"))
 ) |>
-  mutate(price = sprintf("$%.2f", price)) |>  # format first ...
-  tblr() |>                                   # ... then build the table
+  mutate(
+    price = scales::dollar(price),     # currency, via scales
+    added = format(added, "%B %d, %Y") # a custom date format, via base R
+  ) |>
+  tblr() |>
   show_latex()
 ```
 
     \begin{center}
         \begin{booktabs}{
-            colspec = {ll}
+            colspec = {lll}
             }
             \toprule
-            item   & price     \\ 
+            item   & price      & added             \\ 
             \midrule
-            Widget & \$1999.50 \\ 
-            Gadget & \$12.40   \\ 
+            Widget & \$1,999.50 & January 15, 2024  \\ 
+            Gadget & \$12.40    & November 03, 2024 \\ 
             \bottomrule
         \end{booktabs}
     \end{center}
@@ -91,32 +97,10 @@ The formatted `price` is now a text column, so the literal `$` it
 contains is escaped to `\$` for you — write the plain character you want
 and let `tblr` handle the escaping.
 
-Columns you leave as numbers get a sensible default: two decimal places,
-with integer and whole-valued columns printed without decimals.
-
-``` r
-
-tibble(
-  year  = c(2021L, 2022L, 2023L),
-  share = c(3.04, 12.5, 100.5)
-) |>
-  tblr() |>
-  show_latex()
-```
-
-    \begin{center}
-        \begin{booktabs}{
-            colspec = {rr}
-            }
-            \toprule
-            year & share  \\ 
-            \midrule
-            2021 & 3.04   \\ 
-            2022 & 12.50  \\ 
-            2023 & 100.50 \\ 
-            \bottomrule
-        \end{booktabs}
-    \end{center}
+Columns you leave untouched are converted with sensible defaults:
+numbers get two decimal places (integer and whole-valued columns
+without), and dates, logicals, and other types are rendered as R would
+display them.
 
 ## Escaping
 
@@ -157,7 +141,7 @@ Two things to keep in mind:
   Values you pass to
   [`set_column_labels()`](https://turbanisch.github.io/tabularray/reference/set_column_labels.md),
   [`set_column_spanner()`](https://turbanisch.github.io/tabularray/reference/set_column_spanner.md),
-  [`set_alignment()`](https://turbanisch.github.io/tabularray/reference/set_alignment.md),
+  [`set_colspec()`](https://turbanisch.github.io/tabularray/reference/set_colspec.md),
   [`set_source_notes()`](https://turbanisch.github.io/tabularray/reference/set_source_notes.md),
   [`set_interface()`](https://turbanisch.github.io/tabularray/reference/set_interface.md),
   and

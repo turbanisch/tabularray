@@ -63,7 +63,7 @@ df |>
     Note = "Entry C3PO altered to test characters that have a special meaning in LaTeX.",
     Source = "R package \\texttt{dplyr}"
   ) |> 
-  set_alignment(height:birth_year ~ "X[r]") |> 
+  set_colspec(height:birth_year ~ "X[r]") |>
   set_column_labels(
     name = "",
     height = "Height",
@@ -109,17 +109,18 @@ embed the LaTeX markup verbatim.
 
 ## Alternatives
 
-The popular table packages [gt](https://github.com/rstudio/gt),
+Among the popular table packages, [gt](https://github.com/rstudio/gt),
 [kableExtra](https://haozhu233.github.io/kableExtra/), and
-[flextable](https://davidgohel.github.io/flextable/) do not target the
-[tabularray](https://github.com/lvjr/tabularray) LaTeX package. The one
-that does is
-[tinytable](https://vincentarelbundock.github.io/tinytable/) — a
-feature-complete, actively developed package that offers several output
-formats and can address `tabularray`’s inner and outer specifications
-directly. This package predates `tinytable` and is, for most purposes,
-superseded by it.
+[flextable](https://davidgohel.github.io/flextable/) don’t target the
+[tabularray](https://github.com/lvjr/tabularray) LaTeX package.
+[tinytable](https://vincentarelbundock.github.io/tinytable/) does — a
+capable, actively developed, multi-format alternative (LaTeX, HTML,
+Typst, Word) that for many projects is the better choice.
 
-`tabularray` may still hit a sweet spot if you want a small tool
-tailor-made for `tabularray` LaTeX output, with a tidyverse- and
-gt-inspired interface for the most common formatting tasks.
+This package is deliberately narrower: a tidyverse- and gt-inspired
+interface built only for `tabularray`. It leans on two things. First,
+opinionated defaults for layouts common in academic publishing —
+row-group “panel” styling, column spanners, and a natural stub column.
+Second, direct per-column access to raw `tabularray` code: column
+specifications (e.g. `siunitx` `S` or `X[r]` columns), labels, spanners,
+notes, and the inner/outer specifications all accept raw strings.

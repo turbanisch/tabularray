@@ -39,7 +39,7 @@ Note that the value can be a vector with more than one element. Each
 element is automatically wrapped in curly braces.
 
 Shortcut functions targeting specific parts of the interface such as
-[`set_alignment()`](https://turbanisch.github.io/tabularray/reference/set_alignment.md)
+[`set_colspec()`](https://turbanisch.github.io/tabularray/reference/set_colspec.md)
 take precedence over the specifications you make here.
 
 ## Examples

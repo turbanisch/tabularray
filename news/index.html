@@ -41,8 +41,10 @@
 </ul></div>
 <div class="section level3">
 <h3 id="improvements-0-0-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-0-9000"></a></h3>
-<ul><li><p>Whether a column’s contents are escaped is now determined from the column’s type at render time rather than recorded when <code><a href="../reference/tblr.html">tblr()</a></code> is called. Columns formatted before <em>or</em> after <code><a href="../reference/tblr.html">tblr()</a></code> are now both escaped correctly.</p></li>
-<li><p>Functions emit informative errors (e.g. when a caption is missing, more than one grouping variable is supplied, or <code>colspec</code> is set via <code><a href="../reference/set_interface.html">set_interface()</a></code>), and warn when <code><a href="../reference/set_alignment.html">set_alignment()</a></code> / <code><a href="../reference/set_column_labels.html">set_column_labels()</a></code> are given a column name that does not exist.</p></li>
+<ul><li><p><code>set_alignment()</code> has been renamed to <code><a href="../reference/set_colspec.html">set_colspec()</a></code>, which better reflects that it sets the full <code>tabularray</code> column specification (alignment, but also column types such as <code>X</code> or <code>siunitx</code>’s <code>S</code>).</p></li>
+<li><p>Whether a column’s contents are escaped is now determined from the column’s type at render time rather than recorded when <code><a href="../reference/tblr.html">tblr()</a></code> is called. Columns formatted before <em>or</em> after <code><a href="../reference/tblr.html">tblr()</a></code> are now both escaped correctly.</p></li>
+<li><p><code><a href="../reference/set_column_spanner.html">set_column_spanner()</a></code> now errors when a spanner targets non-adjacent columns, which previously rendered a spanner over the wrong columns.</p></li>
+<li><p>Functions emit informative errors (e.g. when a caption is missing, more than one grouping variable is supplied, or <code>colspec</code> is set via <code><a href="../reference/set_interface.html">set_interface()</a></code>), and warn when <code><a href="../reference/set_colspec.html">set_colspec()</a></code> / <code><a href="../reference/set_column_labels.html">set_column_labels()</a></code> are given a column name that does not exist.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="dependencies-0-0-0-9000">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies-0-0-0-9000"></a></h3>

@@ -10,6 +10,16 @@ this package focuses on LaTeX output. It intends to maximize access the
 functionality of the (LaTeX) 'tabularray' package while offering
 convenience functions for the most common formatting tasks.
 
+## See also
+
+Useful links:
+
+- <https://github.com/turbanisch/tabularray>
+
+- <https://turbanisch.github.io/tabularray/>
+
+- Report bugs at <https://github.com/turbanisch/tabularray/issues>
+
 ## Author
 
 **Maintainer**: Felix Turbanisch <felix.turbanisch@uni-goettingen.de>

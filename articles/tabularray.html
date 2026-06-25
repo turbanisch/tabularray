@@ -107,30 +107,34 @@ LaTeX:</p>
 labels default to the column names.</p>
 </div>
 <div class="section level2">
-<h2 id="numbers">Numbers<a class="anchor" aria-label="anchor" href="#numbers"></a>
+<h2 id="formatting">Formatting<a class="anchor" aria-label="anchor" href="#formatting"></a>
 </h2>
-<p><code>tabularray</code> does not try to be a number-formatting
-toolkit. For currency, percentages, thousands separators, significant
-digits, or any other per-column formatting, format the column before
-calling <code><a href="../reference/tblr.html">tblr()</a></code> — for example with <a href="https://scales.r-lib.org" class="external-link">scales</a>,
+<p><code>tabularray</code> does not try to be a formatting toolkit. For
+currency, percentages, thousands separators, significant digits, custom
+date formats, or any other per-column formatting, format the column
+before calling <code><a href="../reference/tblr.html">tblr()</a></code> — for example with <a href="https://scales.r-lib.org" class="external-link">scales</a>, <code><a href="https://rdrr.io/r/base/format.html" class="external-link">base::format()</a></code>,
 <code><a href="https://rdrr.io/r/base/formatc.html" class="external-link">base::formatC()</a></code>, or <code><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">base::sprintf()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  item  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Widget"</span>, <span class="st">"Gadget"</span><span class="op">)</span>,</span>
-<span>  price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1999.5</span>, <span class="fl">12.4</span><span class="op">)</span></span>
+<span>  price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1999.5</span>, <span class="fl">12.4</span><span class="op">)</span>,</span>
+<span>  added <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-01-15"</span>, <span class="st">"2024-11-03"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"$%.2f"</span>, <span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># format first ...</span></span>
-<span>  <span class="fu"><a href="../reference/tblr.html">tblr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>                                   <span class="co"># ... then build the table</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    price <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">dollar</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,     <span class="co"># currency, via scales</span></span>
+<span>    added <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">added</span>, <span class="st">"%B %d, %Y"</span><span class="op">)</span> <span class="co"># a custom date format, via base R</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/tblr.html">tblr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">show_latex</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>\begin{center}
     \begin{booktabs}{
-        colspec = {ll}
+        colspec = {lll}
         }
         \toprule
-        item   &amp; price     \\ 
+        item   &amp; price      &amp; added             \\ 
         \midrule
-        Widget &amp; \$1999.50 \\ 
-        Gadget &amp; \$12.40   \\ 
+        Widget &amp; \$1,999.50 &amp; January 15, 2024  \\ 
+        Gadget &amp; \$12.40    &amp; November 03, 2024 \\ 
         \bottomrule
     \end{booktabs}
 \end{center}</code></pre>
@@ -138,29 +142,10 @@ calling <code><a href="../reference/tblr.html">tblr()</a></code> — for example
 <code>$</code> it contains is escaped to <code>\$</code> for you — write
 the plain character you want and let <code>tblr</code> handle the
 escaping.</p>
-<p>Columns you leave as numbers get a sensible default: two decimal
-places, with integer and whole-valued columns printed without
-decimals.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  year  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2021L</span>, <span class="fl">2022L</span>, <span class="fl">2023L</span><span class="op">)</span>,</span>
-<span>  share <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.04</span>, <span class="fl">12.5</span>, <span class="fl">100.5</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/tblr.html">tblr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">show_latex</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>\begin{center}
-    \begin{booktabs}{
-        colspec = {rr}
-        }
-        \toprule
-        year &amp; share  \\ 
-        \midrule
-        2021 &amp; 3.04   \\ 
-        2022 &amp; 12.50  \\ 
-        2023 &amp; 100.50 \\ 
-        \bottomrule
-    \end{booktabs}
-\end{center}</code></pre>
+<p>Columns you leave untouched are converted with sensible defaults:
+numbers get two decimal places (integer and whole-valued columns
+without), and dates, logicals, and other types are rendered as R would
+display them.</p>
 </div>
 <div class="section level2">
 <h2 id="escaping">Escaping<a class="anchor" aria-label="anchor" href="#escaping"></a>
@@ -170,7 +155,7 @@ decimals.</p>
 <code>{</code>, <code>}</code>, <code>~</code>, <code>^</code>,
 <code>\</code>) are escaped automatically in <strong>text
 columns</strong>, so ordinary data is safe:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>account <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R&amp;D"</span>, <span class="st">"50% off"</span>, <span class="st">"a_b"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tblr.html">tblr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">show_latex</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -195,13 +180,13 @@ If you format a column upstream (as in the price example above), it is
 treated as text and escaped like any other text column.</p></li>
 <li><p><strong>Labels, spanners, alignment, notes, and options are raw
 LaTeX.</strong> Values you pass to <code><a href="../reference/set_column_labels.html">set_column_labels()</a></code>,
-<code><a href="../reference/set_column_spanner.html">set_column_spanner()</a></code>, <code><a href="../reference/set_alignment.html">set_alignment()</a></code>,
+<code><a href="../reference/set_column_spanner.html">set_column_spanner()</a></code>, <code><a href="../reference/set_colspec.html">set_colspec()</a></code>,
 <code><a href="../reference/set_source_notes.html">set_source_notes()</a></code>, <code><a href="../reference/set_interface.html">set_interface()</a></code>, and
 <code><a href="../reference/set_options.html">set_options()</a></code> are inserted verbatim, so you can use LaTeX
 commands there — and you must escape any special characters yourself
 (e.g. write <code>R\&amp;D</code>, not <code>R&amp;D</code>).</p></li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tblr.html">tblr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/set_column_labels.html">set_column_labels</a></span><span class="op">(</span>value <span class="op">=</span> <span class="st">"\\textbf{Value}"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -227,7 +212,7 @@ commands there — and you must escape any special characters yourself
 <code><a href="../reference/tblr.html">tblr()</a></code>, add spanning headers with
 <code><a href="../reference/set_column_spanner.html">set_column_spanner()</a></code> (call it once per spanner row,
 bottom-up), and tune the appearance with <code><a href="../reference/set_theme.html">set_theme()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">starwars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">homeworld</span> <span class="op">==</span> <span class="st">"Tatooine"</span>, <span class="op">!</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Anakin Skywalker"</span>, <span class="st">"Darth Vader"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">height</span>, <span class="va">mass</span>, <span class="va">sex</span>, <span class="va">birth_year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -277,8 +262,8 @@ captioned, supports notes), or <code>"break"</code> (page-breaking).</p>
 </h2>
 <p>The generated markup needs the <code>tabularray</code> package and
 its <code>booktabs</code> library. In a LaTeX preamble:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">tabularray</span>}</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">\UseTblrLibrary</span>{booktabs}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">tabularray</span>}</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">\UseTblrLibrary</span>{booktabs}</span></code></pre></div>
 <p>A reasonably recent <code>tabularray</code> (2023 or later) is
 recommended. In Quarto or R Markdown, the output is embedded verbatim —
 see the <a href="https://github.com/turbanisch/tabularray" class="external-link">README</a>
