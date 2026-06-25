@@ -12,7 +12,7 @@ reference:
 - title: Style columns
   desc: Set per-column properties and spanning headers.
   contents:
-  - set_alignment
+  - set_colspec
   - set_column_labels
   - set_column_spanner
 
