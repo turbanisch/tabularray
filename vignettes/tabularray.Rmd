@@ -57,10 +57,14 @@ example with [scales](https://scales.r-lib.org), `base::format()`,
 ```{r}
 tibble(
   item  = c("Widget", "Gadget"),
-  price = c(1999.5, 12.4)
+  price = c(1999.5, 12.4),
+  added = as.Date(c("2024-01-15", "2024-11-03"))
 ) |>
-  mutate(price = sprintf("$%.2f", price)) |>  # format first ...
-  tblr() |>                                   # ... then build the table
+  mutate(
+    price = scales::dollar(price),     # currency, via scales
+    added = format(added, "%B %d, %Y") # a custom date format, via base R
+  ) |>
+  tblr() |>
   show_latex()
 ```
 
@@ -71,15 +75,6 @@ handle the escaping.
 Columns you leave untouched are converted with sensible defaults: numbers get
 two decimal places (integer and whole-valued columns without), and dates,
 logicals, and other types are rendered as R would display them.
-
-```{r}
-tibble(
-  year  = c(2021L, 2022L, 2023L),
-  share = c(3.04, 12.5, 100.5)
-) |>
-  tblr() |>
-  show_latex()
-```
 
 ## Escaping
 
